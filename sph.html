@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Surat Penawaran Harga - PT. Servo Indonesia Perkasa</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 8mm 12mm 8mm 12mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 8pt;
+      line-height: 1.26;
+      color: #111827;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+    }
+
+    /* HEADER SURAT PENAWARAN HARGA */
+    .header-surat {
+      text-align: center;
+      margin-bottom: 5px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid #000000;
+      position: relative;
+    }
+
+    .header-surat::after {
+      content: "";
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      right: 0;
+      border-bottom: 0.8px solid #000000;
+    }
+
+    .judul-surat {
+      font-size: 12.5pt;
+      font-weight: bold;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin: 0;
+      color: #000000;
+    }
+
+    .kontak-surat {
+      font-size: 7.5pt;
+      color: #374151;
+      margin-top: 2px;
+    }
+
+    /* META SURAT & TANGGAL */
+    .meta-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      font-size: 8pt;
+    }
+
+    .meta-left table {
+      border-collapse: collapse;
+      font-size: 8pt;
+    }
+
+    .meta-left td {
+      padding: 0.5px 0;
+      vertical-align: top;
+    }
+
+    .meta-right {
+      text-align: right;
+      font-size: 8pt;
+    }
+
+    .tujuan-surat {
+      margin-bottom: 5px;
+      font-size: 8pt;
+      line-height: 1.25;
+    }
+
+    /* PARAGRAF INTRO */
+    p.paragraf {
+      margin: 0 0 4px 0;
+      text-align: justify;
+      font-size: 8pt;
+      line-height: 1.26;
+    }
+
+    /* TABEL FORMAL */
+    table.tabel-formal {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4px 0 5px 0;
+      font-size: 7.5pt;
+    }
+
+    table.tabel-formal th,
+    table.tabel-formal td {
+      border: 1px solid #1f2937;
+      padding: 2.5px 4.5px;
+    }
+
+    table.tabel-formal th {
+      background-color: #f3f4f6;
+      color: #000000;
+      font-weight: bold;
+      text-align: center;
+      font-size: 7.2pt;
+      text-transform: uppercase;
+    }
+
+    table.tabel-formal td.t-center {
+      text-align: center;
+    }
+
+    table.tabel-formal td.t-right {
+      text-align: right;
+    }
+
+    table.tabel-formal tr.total-row td {
+      font-weight: bold;
+      background-color: #f9fafb;
+      font-size: 8pt;
+    }
+
+    ol.detail-list {
+      margin: 1.5px 0 0 12px;
+      padding: 0;
+      font-size: 7.2pt;
+      color: #1f2937;
+      line-height: 1.22;
+    }
+
+    ol.detail-list li {
+      margin-bottom: 1px;
+    }
+
+    /* KETENTUAN */
+    .ketentuan-box {
+      border: 1px solid #6b7280;
+      padding: 4px 8px;
+      margin-top: 4px;
+      margin-bottom: 5px;
+      font-size: 7.2pt;
+      line-height: 1.26;
+      background-color: #ffffff;
+    }
+
+    .ketentuan-box strong {
+      color: #000000;
+    }
+
+    /* FOOTER CATATAN RESMI TANPA TTD */
+    .footer-catatan {
+      margin-top: 4px;
+      padding-top: 3px;
+      border-top: 1px solid #9ca3af;
+      font-size: 7.2pt;
+      color: #4b5563;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER RESMI SURAT PENAWARAN HARGA -->
+  <div class="header-surat">
+    <h1 class="judul-surat">SURAT PENAWARAN HARGA</h1>
+    <div class="kontak-surat">
+      No. Handphone / WhatsApp: <strong>08121904374</strong> &nbsp;|&nbsp; Email: <strong>faiqihsan77@gmail.com</strong>
+    </div>
+  </div>
+
+  <!-- META SURAT -->
+  <div class="meta-grid">
+    <div class="meta-left">
+      <table>
+        <tr>
+          <td style="width: 65px;">Nomor</td>
+          <td style="width: 12px;">:</td>
+          <td>014/SPH/SIP/XI/2024</td>
+        </tr>
+        <tr>
+          <td>Lampiran</td>
+          <td>:</td>
+          <td>1 (Satu) Berkas Rincian Teknis</td>
+        </tr>
+        <tr>
+          <td>Perihal</td>
+          <td>:</td>
+          <td><strong>Penawaran Harga Sistem Portal Monitoring Dokumen & Keuangan</strong></td>
+        </tr>
+      </table>
+    </div>
+    <div class="meta-right">
+      Jakarta, 23 November 2024
+    </div>
+  </div>
+
+  <!-- KEPADA YTH -->
+  <div class="tujuan-surat">
+    Kepada Yth.<br>
+    <strong>Direksi / Manajemen PT. Servo Indonesia Perkasa</strong><br>
+    Di Tempat
+  </div>
+
+  <!-- PARAGRAF PEMBUKA -->
+  <p class="paragraf">
+    Dengan hormat,<br>
+    Sehubungan dengan kebutuhan digitalisasi sistem monitoring dokumen kerja sama, arus keuangan, serta administrasi operasional karyawan di lingkungan <strong>PT. Servo Indonesia Perkasa</strong>, bersama ini kami mengajukan rincian penawaran harga pengadaan dan pengembangan sistem portal kantor terpadu dengan spesifikasi pekerjaan sebagai berikut:
+  </p>
+
+  <!-- TABEL RINCIAN LENGKAP & DETAIL -->
+  <table class="tabel-formal">
+    <thead>
+      <tr>
+        <th style="width: 4%;">No</th>
+        <th>Uraian Pekerjaan & Spesifikasi Detail Sistem</th>
+        <th style="width: 11%;">Volume</th>
+        <th style="width: 25%;">Total Biaya (Rp)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="t-center" style="vertical-align: top;">1</td>
+        <td>
+          <strong>Pengembangan Sistem Aplikasi Portal Monitoring Kantor (Sistem Beli Putus)</strong>
+          <ol class="detail-list">
+            <li>
+              <strong>Modul Dashboard Eksekutif & Ringkasan Cepat:</strong> Visualisasi metrik utama secara real-time (jumlah kontrak aktif, realisasi kas masuk, total tagihan belum terbayar, dan pengajuan izin/cuti baru). Dilengkapi <em>Early Warning System</em> untuk peringatan kontrak mendekati habis masa berlaku (&lt; 30 hari) serta panel aksi persetujuan cepat (<em>Quick Approval</em>).
+            </li>
+            <li>
+              <strong>Modul Monitoring Kontrak & Legalitas Kerja Sama (PKS):</strong> Pengelolaan data kontrak rekanan secara terstruktur (Nomor SPK/PKS, nama klien, judul kerja sama, periode, dan nilai kontrak). Dilengkapi fitur kalkulasi hitung mundur sisa waktu otomatis (<em>countdown days</em>), sistem pengarsipan berkas fisik digital (upload & unduh PDF), pelacakan adendum, pencarian cerdas (<em>live search</em>), dan rekapitulasi data ke format Excel.
+            </li>
+            <li>
+              <strong>Modul Manajemen Faktur, Piutang & Arus Kas (Finance):</strong> Pencatatan faktur tagihan invoice klien berbasis termin bertahap, monitoring status penagihan (<em>Lunas, Menunggu Bayar, Jatuh Tempo/Overdue</em>), pencetakan otomatis kwitansi resmi, penerbitan surat pengingat tagihan (<em>reminder</em>), serta rekapitulasi arus kas masuk perusahaan.
+            </li>
+            <li>
+              <strong>Modul Berkas Karyawan & Administrasi Operasional (HR):</strong> Pengelolaan administrasi permohonan digital tanpa kertas (<em>paperless</em>) untuk Cuti Tahunan, Izin Sakit (unggah berkas surat dokter), dan Surat Perintah Tugas (SPT) dinas luar kantor, riwayat persetujuan, serta pencetakan dokumen resmi berlegalitas internal.
+            </li>
+            <li>
+              <strong>Sistem Keamanan & Multi-Role Access Control (RBAC):</strong> Pemisahan wewenang bertingkat untuk 3 peran: <strong>Direktur</strong> (Akses monitoring menyeluruh metrik finansial & approval tingkat akhir), <strong>Manager</strong> (Review operasional, verifikasi invoice & approval cuti staf), dan <strong>Staff</strong> (Entri data operasional & pengajuan permohonan mandiri).
+            </li>
+          </ol>
+        </td>
+        <td class="t-center" style="vertical-align: top;">1 Paket</td>
+        <td class="t-right" style="vertical-align: top; font-weight: bold;">Rp 15.000.000,-</td>
+      </tr>
+      <tr>
+        <td class="t-center" style="vertical-align: top;">2</td>
+        <td>
+          <strong>Paket Cloud Server Dedicated SSD & Domain Bisnis (Tahun Pertama)</strong>
+          <ol class="detail-list">
+            <li>Pendaftaran nama domain resmi perusahaan berekstensi <strong>.com</strong> aktif selama 1 (satu) tahun.</li>
+            <li>Penyediaan Cloud Server Hosting High Performance Unlimited SSD Storage di Data Center Indonesia (kecepatan akses lokal maksimal).</li>
+            <li>Pemasangan Sertifikat Keamanan SSL/HTTPS (Enkripsi Data 256-bit) & Sistem Pencadangan Data (<em>Auto-Backup</em>) berkala.</li>
+          </ol>
+        </td>
+        <td class="t-center" style="vertical-align: top;">1 Tahun</td>
+        <td class="t-right" style="vertical-align: top; font-style: italic;">Termasuk Paket</td>
+      </tr>
+      <tr>
+        <td class="t-center" style="vertical-align: top;">3</td>
+        <td>
+          <strong>Garansi Pemeliharaan Sistem, Dokumentasi & Pelatihan Tim</strong>
+          <ol class="detail-list">
+            <li>Garansi pemeliharaan dan perbaikan kesalahan teknis sistem (<em>bug fixing</em>) selama 3 (tiga) bulan penuh.</li>
+            <li>Penyusunan dokumen panduan penggunaan sistem (<em>User Manual PDF</em>) dan sesi pelatihan untuk seluruh tim pengguna.</li>
+          </ol>
+        </td>
+        <td class="t-center" style="vertical-align: top;">3 Bulan</td>
+        <td class="t-right" style="vertical-align: top; font-style: italic;">Termasuk Paket</td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="3" class="t-right">TOTAL BIAYA PENGEMBANGAN & TAHUN PERTAMA (ALL-IN)</td>
+        <td class="t-right">Rp 15.000.000,-</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TERBILANG -->
+  <p style="margin: -2px 0 4px 0; font-size: 7.5pt; font-style: italic;">
+    Terbilang: <strong>Lima Belas Juta Rupiah</strong> (Sistem beli putus menjadi aset milik penuh perusahaan tanpa biaya sewa lisensi software bulanan).
+  </p>
+
+  <!-- KETENTUAN DAN JADWAL -->
+  <div class="ketentuan-box">
+    <strong>Syarat dan Ketentuan Pekerjaan:</strong>
+    <table style="width: 100%; border-collapse: collapse; font-size: 7.2pt; margin-top: 1px;">
+      <tr>
+        <td style="width: 155px; vertical-align: top;"><strong>1. Waktu Pengerjaan</strong></td>
+        <td style="width: 8px; vertical-align: top;">:</td>
+        <td><strong>2 (dua) bulan / 60 hari kalender</strong> terhitung sejak penandatanganan kesepakatan dan uang muka diterima.</td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top;"><strong>2. Skema Pembayaran</strong></td>
+        <td style="vertical-align: top;">:</td>
+        <td>
+          &bull; <strong>Tahap I (Uang Muka 40%):</strong> Sebesar Rp 6.000.000,- dibayarkan saat kesepakatan proyek dimulai.<br>
+          &bull; <strong>Tahap II (Progress 40%):</strong> Sebesar Rp 6.000.000,- dibayarkan saat progres mencapai akhir bulan ke-1 (uji coba sistem di server demo).<br>
+          &bull; <strong>Tahap III (Pelunasan 20%):</strong> Sebesar Rp 3.000.000,- dibayarkan setelah serah terima sistem operasional live & pelatihan tim selesai.
+        </td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top;"><strong>3. Layanan Tahun Berikutnya</strong></td>
+        <td style="vertical-align: top;">:</td>
+        <td>
+          Untuk tahun ke-2 dan seterusnya, biaya pemeliharaan berkala, perpanjangan Cloud Server Dedicated, Domain .com, dan Keamanan SSL adalah sebesar <strong>Rp 2.000.000,- (Dua Juta Rupiah) per tahun</strong>.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- PARAGRAF PENUTUP -->
+  <p class="paragraf" style="margin-bottom: 3px;">
+    Demikian Surat Penawaran Harga ini kami sampaikan. Besar harapan kami penawaran ini dapat menjadi solusi terbaik bagi efisiensi dan transparansi operasional di PT. Servo Indonesia Perkasa. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.
+  </p>
+
+  <!-- FOOTER CATATAN RESMI TANPA TTD -->
+  <div class="footer-catatan">
+    <div>Dokumen Penawaran Resmi &bull; PT. Servo Indonesia Perkasa</div>
+    <div>Kontak: 08121904374 &bull; faiqihsan77@gmail.com</div>
+  </div>
+
+</body>
+</html>

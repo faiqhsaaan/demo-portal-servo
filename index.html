@@ -2,7 +2,7 @@
 <html lang="id" class="h-full bg-slate-100">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Portal Sistem Terpadu Monitoring & Dokumen - PT. Servo Indonesia Perkasa</title>
   
   <!-- Tailwind CSS CDN -->
@@ -32,13 +32,14 @@
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      -webkit-tap-highlight-color: transparent;
     }
     .tabular-nums {
       font-variant-numeric: tabular-nums;
     }
     ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
+      width: 4px;
+      height: 4px;
     }
     ::-webkit-scrollbar-track {
       background: #f1f5f9;
@@ -47,125 +48,131 @@
       background: #cbd5e1;
       border-radius: 3px;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
   </style>
 </head>
 
-<body class="h-full flex overflow-hidden text-slate-800 antialiased text-[12.5px]">
+<body class="h-full flex overflow-hidden text-slate-800 antialiased text-[12.5px] bg-slate-100">
 
   <!-- ======================================================== -->
-  <!-- SIDEBAR: CORPORATE FULL NAV (10 MODUL LENGKAP) -->
+  <!-- MOBILE SIDEBAR BACKDROP (OVERLAY UNTUK HP) -->
   <!-- ======================================================== -->
-  <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0 z-30 select-none">
+  <div id="mobileBackdrop" onclick="toggleSidebar(false)" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 lg:hidden transition-opacity"></div>
+
+  <!-- ======================================================== -->
+  <!-- SIDEBAR: RESPONSIVE OFF-CANVAS DI HP + TETAP DI DESKTOP -->
+  <!-- ======================================================== -->
+  <aside id="mainSidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0 select-none transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-200 ease-in-out shadow-2xl lg:shadow-none">
     
-    <!-- Logo & Nama PT Servo Indonesia Perkasa -->
-    <div class="h-16 flex items-center px-4 border-b border-slate-800 bg-slate-950/70">
-      <div class="flex items-center gap-3 min-w-0">
-        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-extrabold text-sm tracking-wider shadow-sm shrink-0">
+    <!-- Header Brand di Sidebar -->
+    <div class="h-14 sm:h-16 flex items-center justify-between px-4 border-b border-slate-800 bg-slate-950/80">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-extrabold text-xs tracking-wider shadow-sm shrink-0">
           SIP
         </div>
         <div class="leading-tight min-w-0">
-          <span class="font-bold text-white text-[12.5px] tracking-tight block truncate">PT. SERVO INDONESIA</span>
-          <span class="text-[9.5px] text-blue-400 font-mono tracking-wider block">ENTERPRISE SYSTEM v2.4</span>
+          <span class="font-bold text-white text-[12px] sm:text-[12.5px] tracking-tight block truncate">PT. SERVO INDONESIA</span>
+          <span class="text-[9px] sm:text-[9.5px] text-blue-400 font-mono tracking-wider block">ENTERPRISE SYSTEM v2.4</span>
         </div>
       </div>
+      <!-- Tombol Tutup Sidebar Khusus HP -->
+      <button onclick="toggleSidebar(false)" class="p-1.5 text-slate-400 hover:text-white rounded-md lg:hidden" title="Tutup Menu">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
     </div>
 
-    <!-- Navigasi Menu Sidebar Terstruktur -->
-    <div class="flex-1 overflow-y-auto py-3 px-2 space-y-4">
+    <!-- Navigasi Menu Sidebar -->
+    <div class="flex-1 overflow-y-auto py-3 px-2 space-y-3.5">
       
       <!-- Group 1: Ringkasan Utama -->
       <div>
-        <p class="px-2.5 text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mb-1">Utama</p>
+        <p class="px-2.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Utama</p>
         <nav class="space-y-0.5">
-          <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-semibold transition text-white bg-slate-800 border-l-2 border-blue-500">
-            <i data-lucide="layout-grid" class="w-4 h-4 text-blue-400"></i>
-            <span>Dashboard Eksekutif</span>
+          <button onclick="handleNavClick('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-semibold transition text-white bg-slate-800 border-l-2 border-blue-500">
+            <i data-lucide="layout-grid" class="w-4 h-4 text-blue-400 shrink-0"></i>
+            <span class="truncate">Dashboard Eksekutif</span>
           </button>
         </nav>
       </div>
 
       <!-- Group 2: Kontrak & Legalitas -->
       <div>
-        <p class="px-2.5 text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mb-1">Kontrak & Legalitas</p>
+        <p class="px-2.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Kontrak & Legalitas</p>
         <nav class="space-y-0.5">
-          <button onclick="switchTab('kontrak')" id="nav-kontrak" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <div class="flex items-center gap-2.5">
-              <i data-lucide="file-check" class="w-4 h-4 text-slate-400"></i>
-              <span>Kontrak & PKS Rekanan</span>
+          <button onclick="handleNavClick('kontrak')" id="nav-kontrak" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <div class="flex items-center gap-2.5 min-w-0 truncate">
+              <i data-lucide="file-check" class="w-4 h-4 text-slate-400 shrink-0"></i>
+              <span class="truncate">Kontrak & PKS Rekanan</span>
             </div>
-            <span class="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-800/80">2 Alert</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 border border-amber-800/80 shrink-0">2 Alert</span>
           </button>
           
-          <button onclick="switchTab('legal-docs')" id="nav-legal-docs" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <i data-lucide="folder-lock" class="w-4 h-4 text-slate-400"></i>
-            <span>Arsip Legalitas PT</span>
+          <button onclick="handleNavClick('legal-docs')" id="nav-legal-docs" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <i data-lucide="folder-lock" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="truncate">Arsip Legalitas PT</span>
           </button>
         </nav>
       </div>
 
-      <!-- Group 3: Keuangan & Arus Kas -->
+      <!-- Group 3: Keuangan & Kas -->
       <div>
-        <p class="px-2.5 text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mb-1">Keuangan & Kas</p>
+        <p class="px-2.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Keuangan & Kas</p>
         <nav class="space-y-0.5">
-          <button onclick="switchTab('finance')" id="nav-finance" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <div class="flex items-center gap-2.5">
-              <i data-lucide="receipt" class="w-4 h-4 text-slate-400"></i>
-              <span>Faktur & Piutang Klien</span>
+          <button onclick="handleNavClick('finance')" id="nav-finance" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <div class="flex items-center gap-2.5 min-w-0 truncate">
+              <i data-lucide="receipt" class="w-4 h-4 text-slate-400 shrink-0"></i>
+              <span class="truncate">Faktur & Piutang Klien</span>
             </div>
-            <span class="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-300">3 Unpaid</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 shrink-0">3 Unpaid</span>
           </button>
 
-          <button onclick="switchTab('kas-masuk')" id="nav-kas-masuk" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <i data-lucide="wallet" class="w-4 h-4 text-slate-400"></i>
-            <span>Buku Kas & Bank Masuk</span>
+          <button onclick="handleNavClick('kas-masuk')" id="nav-kas-masuk" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <i data-lucide="wallet" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="truncate">Buku Kas & Bank Masuk</span>
           </button>
         </nav>
       </div>
 
       <!-- Group 4: SDM & Operasional Lapangan -->
       <div>
-        <p class="px-2.5 text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mb-1">SDM & Operasional</p>
+        <p class="px-2.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">SDM & Operasional</p>
         <nav class="space-y-0.5">
-          <button onclick="switchTab('hr')" id="nav-hr" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <div class="flex items-center gap-2.5">
-              <i data-lucide="calendar-check" class="w-4 h-4 text-slate-400"></i>
-              <span>Cuti & Izin Karyawan</span>
+          <button onclick="handleNavClick('hr')" id="nav-hr" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <div class="flex items-center gap-2.5 min-w-0 truncate">
+              <i data-lucide="calendar-check" class="w-4 h-4 text-slate-400 shrink-0"></i>
+              <span class="truncate">Cuti & Izin Karyawan</span>
             </div>
-            <span class="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-blue-950 text-blue-300 border border-blue-800/80">3 Antrean</span>
+            <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-blue-950 text-blue-300 border border-blue-800/80 shrink-0">3 Antrean</span>
           </button>
 
-          <button onclick="switchTab('spt')" id="nav-spt" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <i data-lucide="plane-takeoff" class="w-4 h-4 text-slate-400"></i>
-            <span>Surat Tugas Dinas (SPT)</span>
+          <button onclick="handleNavClick('spt')" id="nav-spt" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <i data-lucide="plane-takeoff" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="truncate">Surat Tugas Dinas (SPT)</span>
           </button>
 
-          <button onclick="switchTab('karyawan')" id="nav-karyawan" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <i data-lucide="users-round" class="w-4 h-4 text-slate-400"></i>
-            <span>Direktori Tim & Staf</span>
+          <button onclick="handleNavClick('karyawan')" id="nav-karyawan" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <i data-lucide="users-round" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="truncate">Direktori Tim & Staf</span>
           </button>
         </nav>
       </div>
 
       <!-- Group 5: Laporan & Keamanan -->
       <div>
-        <p class="px-2.5 text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mb-1">Laporan & Hak Akses</p>
+        <p class="px-2.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Laporan & Hak Akses</p>
         <nav class="space-y-0.5">
-          <button onclick="switchTab('laporan')" id="nav-laporan" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <i data-lucide="file-pie-chart" class="w-4 h-4 text-slate-400"></i>
-            <span>Pusat Laporan & Rekap</span>
+          <button onclick="handleNavClick('laporan')" id="nav-laporan" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <i data-lucide="file-pie-chart" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="truncate">Pusat Laporan & Rekap</span>
           </button>
 
-          <button onclick="switchTab('rbac')" id="nav-rbac" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <i data-lucide="shield-check" class="w-4 h-4 text-slate-400"></i>
-            <span>Matriks Hak Akses (RBAC)</span>
+          <button onclick="handleNavClick('rbac')" id="nav-rbac" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <i data-lucide="shield-check" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="truncate">Matriks Hak Akses (RBAC)</span>
           </button>
 
-          <button onclick="switchTab('audit')" id="nav-audit" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
-            <i data-lucide="history" class="w-4 h-4 text-slate-400"></i>
-            <span>Audit Log & Keamanan</span>
+          <button onclick="handleNavClick('audit')" id="nav-audit" class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded text-[12px] font-medium transition text-slate-300 hover:text-white hover:bg-slate-800/60">
+            <i data-lucide="history" class="w-4 h-4 text-slate-400 shrink-0"></i>
+            <span class="truncate">Audit Log & Keamanan</span>
           </button>
         </nav>
       </div>
@@ -175,15 +182,15 @@
     <!-- User Profile Bar di Bawah Sidebar -->
     <div class="p-3 border-t border-slate-800 bg-slate-950/70 flex items-center justify-between">
       <div class="flex items-center gap-2.5 min-w-0">
-        <div class="w-8 h-8 rounded bg-blue-700/80 border border-blue-600/50 flex items-center justify-center text-xs font-bold text-white shrink-0" id="avatarBadge">
+        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-blue-700/80 border border-blue-600/50 flex items-center justify-center text-xs font-bold text-white shrink-0" id="avatarBadge">
           DIR
         </div>
         <div class="min-w-0 leading-tight">
           <p class="text-xs font-semibold text-white truncate" id="sidebarUserName">Direksi Utama</p>
-          <p class="text-[10px] text-blue-300 font-mono truncate" id="sidebarRoleLabel">PT. Servo Indonesia Perkasa</p>
+          <p class="text-[9.5px] text-blue-300 font-mono truncate" id="sidebarRoleLabel">PT. Servo Indonesia Perkasa</p>
         </div>
       </div>
-      <button onclick="showToast('Sesi aktif aman (Enkripsi SSL 256-bit)')" title="Keamanan Sistem" class="p-1.5 text-slate-400 hover:text-emerald-400 rounded hover:bg-slate-800 transition">
+      <button onclick="showToast('Sesi aktif aman (Enkripsi SSL 256-bit)')" title="Keamanan Sistem" class="p-1.5 text-slate-400 hover:text-emerald-400 rounded hover:bg-slate-800 transition shrink-0">
         <i data-lucide="lock" class="w-3.5 h-3.5"></i>
       </button>
     </div>
@@ -195,51 +202,49 @@
   <!-- ======================================================== -->
   <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
     
-    <!-- TOP BAR: BREADCRUMB, SIMULATOR ROLE, DAN PEMBERITAHUAN -->
-    <header class="h-14 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 z-20">
+    <!-- TOP BAR RESPONSIVE -->
+    <header class="h-14 bg-white border-b border-slate-200 px-3 sm:px-6 flex items-center justify-between shrink-0 z-20 gap-2">
       
-      <!-- Kiri: Breadcrumb -->
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2 text-xs text-slate-500 font-medium">
-          <span class="text-slate-700 font-bold">PT. Servo Indonesia Perkasa</span>
-          <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
-          <span class="text-slate-900 font-semibold" id="pageBreadcrumb">Dashboard Eksekutif</span>
+      <!-- Kiri: Tombol Hamburger Menu (HP) + Breadcrumb -->
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <!-- Tombol Hamburger Mobile -->
+        <button onclick="toggleSidebar(true)" class="p-1.5 text-slate-700 hover:bg-slate-100 rounded-md lg:hidden shrink-0" title="Buka Menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex items-center gap-1.5 text-xs text-slate-500 font-medium truncate">
+          <span class="text-slate-800 font-bold truncate">PT. Servo Indonesia</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 hidden sm:inline shrink-0"></i>
+          <span class="text-slate-900 font-semibold hidden sm:inline truncate" id="pageBreadcrumb">Dashboard Eksekutif</span>
         </div>
-        <span class="hidden lg:inline-block w-px h-4 bg-slate-200"></span>
-        <span class="hidden lg:inline-flex items-center gap-1.5 text-[11px] text-emerald-700 font-mono bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          Database Cloud: Online
-        </span>
       </div>
 
       <!-- Kanan: Switch Role Realistis & Notifikasi -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
         
         <!-- Role Simulator Switcher -->
-        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-md border border-slate-200 text-xs">
-          <span class="text-[10.5px] text-slate-500 font-medium px-1.5 hidden sm:inline">Mode Akses:</span>
-          <button onclick="setRole('direktur')" id="btn-role-direktur" class="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-white text-slate-900 shadow-sm border border-slate-200 transition">
+        <div class="flex items-center gap-0.5 sm:gap-1 bg-slate-100 p-0.5 sm:p-1 rounded-md border border-slate-200 text-xs">
+          <span class="text-[10px] text-slate-500 font-medium px-1 hidden md:inline">Akses:</span>
+          <button onclick="setRole('direktur')" id="btn-role-direktur" class="px-2 sm:px-2.5 py-0.5 rounded text-[10px] sm:text-[11px] font-semibold bg-white text-slate-900 shadow-xs border border-slate-200 transition">
             Direktur
           </button>
-          <button onclick="setRole('manager')" id="btn-role-manager" class="px-2.5 py-0.5 rounded text-[11px] font-medium text-slate-600 hover:text-slate-900 transition">
+          <button onclick="setRole('manager')" id="btn-role-manager" class="px-2 sm:px-2.5 py-0.5 rounded text-[10px] sm:text-[11px] font-medium text-slate-600 hover:text-slate-900 transition">
             Manager
           </button>
-          <button onclick="setRole('staff')" id="btn-role-staff" class="px-2.5 py-0.5 rounded text-[11px] font-medium text-slate-600 hover:text-slate-900 transition">
+          <button onclick="setRole('staff')" id="btn-role-staff" class="px-2 sm:px-2.5 py-0.5 rounded text-[10px] sm:text-[11px] font-medium text-slate-600 hover:text-slate-900 transition">
             Staff
           </button>
         </div>
 
-        <div class="w-px h-4 bg-slate-200"></div>
-
         <!-- Tombol Notifikasi Cepat -->
         <div class="relative">
-          <button onclick="toggleNotifications()" class="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded transition relative" title="Notifikasi Sistem">
+          <button onclick="toggleNotifications()" class="p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded transition relative" title="Notifikasi Sistem">
             <i data-lucide="bell" class="w-4 h-4"></i>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-600 rounded-full ring-2 ring-white"></span>
+            <span class="absolute top-1 right-1 w-2 h-2 bg-rose-600 rounded-full ring-2 ring-white"></span>
           </button>
 
           <!-- Dropdown Notifikasi -->
-          <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-slate-200 py-2 z-50 text-xs">
+          <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-lg shadow-xl border border-slate-200 py-2 z-50 text-xs">
             <div class="px-3 py-1.5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
               <span class="font-bold text-slate-900">Pemberitahuan Sistem</span>
               <span class="text-[10px] font-mono text-rose-600 font-bold">2 Kritis</span>
@@ -247,14 +252,14 @@
             <div class="divide-y divide-slate-100 max-h-64 overflow-y-auto">
               <div class="p-3 hover:bg-slate-50 cursor-pointer">
                 <p class="font-semibold text-slate-900 text-xs flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Kontrak Sisa 14 Hari
+                  <span class="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span> Kontrak Sisa 14 Hari
                 </p>
                 <p class="text-[11px] text-slate-500 mt-0.5">PT. Petro Indo Energi (No. 072/PO-U/XI/2023) segera berakhir.</p>
                 <span class="text-[10px] text-slate-400 font-mono mt-1 block">Hari ini, 09:30 WIB</span>
               </div>
               <div class="p-3 hover:bg-slate-50 cursor-pointer">
                 <p class="font-semibold text-slate-900 text-xs flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Faktur Jatuh Tempo
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span> Faktur Jatuh Tempo
                 </p>
                 <p class="text-[11px] text-slate-500 mt-0.5">INV-2024-0112 senilai Rp 85.000.000 belum diverifikasi lunas.</p>
                 <span class="text-[10px] text-slate-400 font-mono mt-1 block">Kemarin, 14:15 WIB</span>
@@ -263,133 +268,135 @@
           </div>
         </div>
 
-        <!-- Tombol Aksi Cepat -->
-        <button onclick="openModal('modalKontrak')" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold shadow-sm transition">
+        <!-- Tombol Tambah Kontrak (Khusus Desktop/Tablet) -->
+        <button onclick="openModal('modalKontrak')" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold shadow-xs transition">
           <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">Input Kontrak Baru</span>
+          <span>Input Kontrak</span>
         </button>
 
       </div>
     </header>
 
     <!-- CONTENT BODY (SCROLLABLE CANVAS) -->
-    <main class="flex-1 overflow-y-auto p-6 bg-slate-100/70 space-y-5">
+    <main class="flex-1 overflow-y-auto p-3.5 sm:p-5 lg:p-6 space-y-4 sm:space-y-5">
 
       <!-- ======================================================== -->
       <!-- TAB 1: DASHBOARD EKSEKUTIF -->
       <!-- ======================================================== -->
-      <section id="tab-dashboard" class="space-y-5">
+      <section id="tab-dashboard" class="space-y-4 sm:space-y-5">
         
         <!-- Filter Bar & Company Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 shadow-xs">
           <div>
-            <h1 class="text-sm font-bold text-slate-900">Dashboard Eksekutif & Ringkasan Operasional Terpadu</h1>
-            <p class="text-[11px] text-slate-500 mt-0.5">Pemantauan performa kontrak rekanan, kontrol jatuh tempo piutang, dan verifikasi dokumen aktif PT. Servo Indonesia Perkasa.</p>
+            <h1 class="text-xs sm:text-sm font-bold text-slate-900">Dashboard Eksekutif & Ringkasan Terpadu</h1>
+            <p class="text-[10.5px] sm:text-[11px] text-slate-500 mt-0.5">Pemantauan kontrak rekanan, kontrol jatuh tempo piutang, dan verifikasi dokumen aktif PT. Servo Indonesia Perkasa.</p>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 self-start sm:self-auto">
             <span class="text-xs text-slate-500 font-medium">Periode:</span>
             <select class="text-xs bg-slate-50 border border-slate-300 rounded px-2.5 py-1 text-slate-700 font-medium focus:outline-none">
-              <option>Kuartal IV (Q4 - Nov/Des 2024)</option>
-              <option>Tahun Kalender Berjalan (2024)</option>
+              <option>Q4 (Nov - Des 2024)</option>
+              <option>Tahun Kalender 2024</option>
             </select>
-            <button onclick="showToast('Data indikator eksekutif diperbarui realtime!')" class="p-1.5 text-slate-500 hover:text-slate-800 border border-slate-300 rounded bg-slate-50 hover:bg-slate-100" title="Refresh">
+            <button onclick="showToast('Data indikator diperbarui realtime!')" class="p-1.5 text-slate-500 hover:text-slate-800 border border-slate-300 rounded bg-slate-50 hover:bg-slate-100" title="Refresh">
               <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
             </button>
           </div>
         </div>
 
-        <!-- 5 METRIK UTAMA -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+        <!-- 5 METRIK UTAMA (RESPONSIVE GRID) -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
           
-          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Kontrak Aktif</span>
-            <p class="text-xl font-bold text-slate-900 tabular-nums mt-1">14 <span class="text-xs font-normal text-slate-500">PKS</span></p>
-            <p class="text-[10px] text-emerald-600 font-mono mt-1 font-semibold">Total: Rp 2,45 Miliar</p>
+          <div class="bg-white p-3 sm:p-3.5 rounded-lg border border-slate-200 shadow-xs col-span-1">
+            <span class="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Kontrak Aktif</span>
+            <p class="text-lg sm:text-xl font-bold text-slate-900 tabular-nums mt-1">14 <span class="text-[11px] font-normal text-slate-500">PKS</span></p>
+            <p class="text-[9.5px] sm:text-[10px] text-emerald-600 font-mono mt-0.5 font-semibold truncate">Nilai: Rp 2,45 M</p>
           </div>
 
-          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Kas Masuk (Q4)</span>
-            <p class="text-xl font-bold text-emerald-700 tabular-nums font-mono mt-1">Rp 1,12 M</p>
-            <p class="text-[10px] text-slate-500 font-mono mt-1">8 Termin Invoice</p>
+          <div class="bg-white p-3 sm:p-3.5 rounded-lg border border-slate-200 shadow-xs col-span-1">
+            <span class="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Kas Masuk (Q4)</span>
+            <p class="text-lg sm:text-xl font-bold text-emerald-700 tabular-nums font-mono mt-1">Rp 1,12 M</p>
+            <p class="text-[9.5px] sm:text-[10px] text-slate-500 font-mono mt-0.5 truncate">8 Termin Lunas</p>
           </div>
 
-          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Piutang Klien</span>
-            <p class="text-xl font-bold text-rose-700 tabular-nums font-mono mt-1">Rp 285 Jt</p>
-            <p class="text-[10px] text-rose-600 font-medium mt-1">1 Invoice Overdue</p>
+          <div class="bg-white p-3 sm:p-3.5 rounded-lg border border-slate-200 shadow-xs col-span-1">
+            <span class="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Piutang Klien</span>
+            <p class="text-lg sm:text-xl font-bold text-rose-700 tabular-nums font-mono mt-1">Rp 285 Jt</p>
+            <p class="text-[9.5px] sm:text-[10px] text-rose-600 font-medium mt-0.5 truncate">1 Invoice Telat</p>
           </div>
 
-          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Karyawan Aktif</span>
-            <p class="text-xl font-bold text-slate-900 tabular-nums mt-1">28 <span class="text-xs font-normal text-slate-500">Staf</span></p>
-            <p class="text-[10px] text-blue-600 font-medium mt-1">Pusat & Workshop</p>
+          <div class="bg-white p-3 sm:p-3.5 rounded-lg border border-slate-200 shadow-xs col-span-1">
+            <span class="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Karyawan Aktif</span>
+            <p class="text-lg sm:text-xl font-bold text-slate-900 tabular-nums mt-1">28 <span class="text-[11px] font-normal text-slate-500">Staf</span></p>
+            <p class="text-[9.5px] sm:text-[10px] text-blue-600 font-medium mt-0.5 truncate">Pusat & Workshop</p>
           </div>
 
-          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Pengajuan Cuti/SPT</span>
-            <p class="text-xl font-bold text-indigo-700 tabular-nums mt-1">4 <span class="text-xs font-normal text-slate-500">Berkas</span></p>
-            <p class="text-[10px] text-amber-700 font-semibold mt-1">Pending Approval</p>
+          <div class="bg-white p-3 sm:p-3.5 rounded-lg border border-slate-200 shadow-xs col-span-2 sm:col-span-1">
+            <span class="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Pengajuan Cuti/SPT</span>
+            <p class="text-lg sm:text-xl font-bold text-indigo-700 tabular-nums mt-1">4 <span class="text-[11px] font-normal text-slate-500">Berkas</span></p>
+            <p class="text-[9.5px] sm:text-[10px] text-amber-700 font-semibold mt-0.5 truncate">Pending Approval</p>
           </div>
 
         </div>
 
         <!-- 2 BLOK TABEL RINGKASAN: KONTRAK DEADLINE & DOKUMEN BUTUH APPROVAL -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
           
           <!-- Kiri: Peringatan Dini Kontrak Kritis (7 Kolom) -->
-          <div class="lg:col-span-7 bg-white rounded-lg border border-slate-200 shadow-sm">
-            <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+          <div class="lg:col-span-7 bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+            <div class="px-3.5 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
               <div class="flex items-center gap-2">
-                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
-                <h2 class="font-bold text-xs text-slate-900 uppercase tracking-wide">Peringatan Dini: Kontrak Mendekati Berakhir (&lt; 30 Hari)</h2>
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500 shrink-0"></i>
+                <h2 class="font-bold text-[11px] sm:text-xs text-slate-900 uppercase tracking-wide">Peringatan: Kontrak Mendekati Berakhir (&lt; 30 Hari)</h2>
               </div>
-              <button onclick="switchTab('kontrak')" class="text-xs text-blue-600 hover:underline font-semibold">Buka Seluruh Kontrak</button>
+              <button onclick="switchTab('kontrak')" class="text-[11px] sm:text-xs text-blue-600 hover:underline font-semibold shrink-0">Buka Semua</button>
             </div>
+            
+            <!-- Tabel Responsif dengan Horizontal Scroll di HP -->
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse">
+              <table class="w-full text-left text-xs border-collapse min-w-[540px]">
                 <thead>
-                  <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold text-[11px]">
-                    <th class="py-2.5 px-3">No. Dokumen / PKS</th>
-                    <th class="py-2.5 px-3">Nama Klien & Pekerjaan</th>
-                    <th class="py-2.5 px-3 font-mono">Tgl Berakhir</th>
-                    <th class="py-2.5 px-3 text-center">Sisa Waktu</th>
-                    <th class="py-2.5 px-3 text-right">Tindakan</th>
+                  <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold text-[10.5px] sm:text-[11px]">
+                    <th class="py-2 px-3">No. Dokumen / PKS</th>
+                    <th class="py-2 px-3">Nama Klien & Pekerjaan</th>
+                    <th class="py-2 px-3 font-mono">Tgl Berakhir</th>
+                    <th class="py-2 px-3 text-center">Sisa Waktu</th>
+                    <th class="py-2 px-3 text-right">Tindakan</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-slate-100 text-[11.5px]">
                   <tr class="hover:bg-slate-50/80 bg-rose-50/20">
-                    <td class="py-3 px-3 font-mono font-medium text-slate-800">072/PO-U/XI/2023</td>
-                    <td class="py-3 px-3">
+                    <td class="py-2.5 px-3 font-mono font-medium text-slate-800">072/PO-U/XI/2023</td>
+                    <td class="py-2.5 px-3">
                       <span class="font-bold text-slate-900 block">PT. Petro Indo Energi</span>
-                      <span class="text-[11px] text-slate-500">Pemeliharaan Kompresor & Genset Lapangan</span>
+                      <span class="text-[10px] text-slate-500">Pemeliharaan Kompresor Gas Lapangan</span>
                     </td>
-                    <td class="py-3 px-3 font-mono text-slate-600">05 Des 2024</td>
-                    <td class="py-3 px-3 text-center">
-                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-100 text-rose-800 border border-rose-300">
-                        14 Hari Lagi
+                    <td class="py-2.5 px-3 font-mono text-slate-600">05 Des 2024</td>
+                    <td class="py-2.5 px-3 text-center">
+                      <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-mono font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                        14 Hari
                       </span>
                     </td>
-                    <td class="py-3 px-3 text-right">
-                      <button onclick="openDetailModal('PT. Petro Indo Energi', '072/PO-U/XI/2023', 'Rp 145.000.000', '05 Des 2023 s/d 05 Des 2024', 'Pemeliharaan Unit Mesin Kompresor Lapangan Blok B', 'Sisa 14 Hari (Perlu Adendum Segera)')" class="px-2.5 py-1 bg-white border border-slate-300 hover:bg-slate-50 rounded text-[11px] font-semibold text-slate-700">
-                        Buat Adendum
+                    <td class="py-2.5 px-3 text-right">
+                      <button onclick="openDetailModal('PT. Petro Indo Energi', '072/PO-U/XI/2023', 'Rp 145.000.000', '05 Des 2023 s/d 05 Des 2024', 'Pemeliharaan Unit Mesin Kompresor Lapangan Blok B', 'Sisa 14 Hari (Perlu Adendum Segera)')" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 rounded text-[10.5px] font-semibold text-slate-700">
+                        Adendum
                       </button>
                     </td>
                   </tr>
 
                   <tr class="hover:bg-slate-50/80 bg-amber-50/20">
-                    <td class="py-3 px-3 font-mono font-medium text-slate-800">019/PKS/DIR/I/2024</td>
-                    <td class="py-3 px-3">
+                    <td class="py-2.5 px-3 font-mono font-medium text-slate-800">019/PKS/DIR/I/2024</td>
+                    <td class="py-2.5 px-3">
                       <span class="font-bold text-slate-900 block">PT. Mitra Logistik Bahari</span>
-                      <span class="text-[11px] text-slate-500">Penyewaan Alat Angkut Forklift & Traksi</span>
+                      <span class="text-[10px] text-slate-500">Sewa Alat Angkut Forklift & Traksi</span>
                     </td>
-                    <td class="py-3 px-3 font-mono text-slate-600">19 Des 2024</td>
-                    <td class="py-3 px-3 text-center">
-                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                        28 Hari Lagi
+                    <td class="py-2.5 px-3 font-mono text-slate-600">19 Des 2024</td>
+                    <td class="py-2.5 px-3 text-center">
+                      <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9.5px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                        28 Hari
                       </span>
                     </td>
-                    <td class="py-3 px-3 text-right">
-                      <button onclick="openDetailModal('PT. Mitra Logistik Bahari', '019/PKS/DIR/I/2024', 'Rp 220.000.000', '19 Jan 2024 s/d 19 Des 2024', 'Sewa Unit Traksi dan Forklift Workshop Surabaya', 'Sisa 28 Hari (Klien berminat perpanjang 1 tahun)')" class="px-2.5 py-1 bg-white border border-slate-300 hover:bg-slate-50 rounded text-[11px] font-semibold text-slate-700">
+                    <td class="py-2.5 px-3 text-right">
+                      <button onclick="openDetailModal('PT. Mitra Logistik Bahari', '019/PKS/DIR/I/2024', 'Rp 220.000.000', '19 Jan 2024 s/d 19 Des 2024', 'Sewa Unit Traksi dan Forklift Workshop Surabaya', 'Sisa 28 Hari (Klien berminat perpanjang 1 tahun)')" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 rounded text-[10.5px] font-semibold text-slate-700">
                         Review
                       </button>
                     </td>
@@ -400,48 +407,48 @@
           </div>
 
           <!-- Kanan: Antrean Approval Operasional (5 Kolom) -->
-          <div class="lg:col-span-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-            <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+          <div class="lg:col-span-5 bg-white rounded-lg border border-slate-200 shadow-xs">
+            <div class="px-3.5 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
               <div class="flex items-center gap-2">
-                <i data-lucide="check-square" class="w-4 h-4 text-blue-600"></i>
-                <h2 class="font-bold text-xs text-slate-900 uppercase tracking-wide">Persetujuan Dokumen Operasional</h2>
+                <i data-lucide="check-square" class="w-4 h-4 text-blue-600 shrink-0"></i>
+                <h2 class="font-bold text-[11px] sm:text-xs text-slate-900 uppercase tracking-wide">Persetujuan Dokumen</h2>
               </div>
-              <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200" id="currentRoleIndicator">Role: Direktur</span>
+              <span class="text-[9.5px] font-mono font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200" id="currentRoleIndicator">Role: Direktur</span>
             </div>
 
             <div class="p-3 divide-y divide-slate-100">
               
-              <div class="py-2.5 flex items-start justify-between gap-3">
-                <div class="space-y-0.5">
+              <div class="py-2 sm:py-2.5 flex items-start justify-between gap-2">
+                <div class="space-y-0.5 min-w-0">
                   <div class="flex items-center gap-1.5">
                     <span class="font-bold text-slate-900 text-xs">Dina Safitri</span>
-                    <span class="text-[10px] text-slate-500 font-mono">| Div. Keuangan & Pajak</span>
+                    <span class="text-[9.5px] text-slate-500 font-mono truncate">| Keuangan</span>
                   </div>
-                  <p class="text-[11px] text-slate-700 font-medium">Pengajuan Cuti Tahunan (3 Hari: 25 - 27 Nov)</p>
-                  <p class="text-[10px] text-amber-700 font-medium">Status: Menunggu Rekomendasi Manager</p>
+                  <p class="text-[11px] text-slate-700 font-medium">Cuti Tahunan (3 Hari: 25 - 27 Nov)</p>
+                  <p class="text-[9.5px] text-amber-700 font-medium">Menunggu Manager</p>
                 </div>
                 <div class="flex gap-1 shrink-0 approval-group">
-                  <button onclick="approveDirect(this, 'Disetujui')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-semibold transition shadow-xs">
+                  <button onclick="approveDirect(this, 'Disetujui')" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10.5px] font-semibold transition">
                     Setujui
                   </button>
-                  <button onclick="approveDirect(this, 'Ditolak')" class="px-2 py-1 border border-slate-300 hover:bg-slate-100 text-slate-700 rounded text-[11px] font-medium transition">
+                  <button onclick="approveDirect(this, 'Ditolak')" class="px-1.5 py-1 border border-slate-300 hover:bg-slate-100 text-slate-700 rounded text-[10.5px] font-medium transition">
                     Tolak
                   </button>
                 </div>
               </div>
 
-              <div class="py-2.5 flex items-start justify-between gap-3">
-                <div class="space-y-0.5">
+              <div class="py-2 sm:py-2.5 flex items-start justify-between gap-2">
+                <div class="space-y-0.5 min-w-0">
                   <div class="flex items-center gap-1.5">
                     <span class="font-bold text-slate-900 text-xs">Bambang Irawan</span>
-                    <span class="text-[10px] text-slate-500 font-mono">| Teknisi Mekanikal</span>
+                    <span class="text-[9.5px] text-slate-500 font-mono truncate">| Mekanikal</span>
                   </div>
-                  <p class="text-[11px] text-slate-700 font-medium">Surat Perintah Tugas Luar Kota (Depo Cilegon - 2 Hari)</p>
-                  <p class="text-[10px] text-blue-700 font-medium">Validasi Manager Selesai &bull; Butuh TTD Direktur</p>
+                  <p class="text-[11px] text-slate-700 font-medium">Surat Tugas Luar Kota (Cilegon)</p>
+                  <p class="text-[9.5px] text-blue-700 font-medium">Butuh TTD Direktur</p>
                 </div>
                 <div class="flex gap-1 shrink-0 approval-group">
-                  <button onclick="approveDirect(this, 'ACC Direktur')" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-semibold transition shadow-xs">
-                    TTD Digital
+                  <button onclick="approveDirect(this, 'ACC Direktur')" class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[10.5px] font-semibold transition">
+                    TTD
                   </button>
                 </div>
               </div>
@@ -458,182 +465,146 @@
       <!-- ======================================================== -->
       <section id="tab-kontrak" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div>
-            <h2 class="text-sm font-bold text-slate-900">Master Data Dokumen Kontrak Kerja Sama & PKS Rekanan</h2>
-            <p class="text-[11px] text-slate-500 mt-0.5">Pengarsipan digital surat perjanjian kerja sama, nilai proyek, klausul garansi, dan berkas fisik PDF.</p>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Dokumen Kontrak Kerja Sama & PKS Rekanan</h2>
+            <p class="text-[10.5px] sm:text-[11px] text-slate-500 mt-0.5">Pengarsipan digital surat perjanjian kerja sama, nilai proyek, klausul garansi, dan berkas fisik PDF.</p>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="showToast('Mengunduh rekapitulasi data kontrak format .XLSX')" class="px-3 py-1.5 border border-slate-300 rounded text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5">
-              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-600"></i> Export Excel
+          <div class="flex items-center gap-2 self-start sm:self-auto">
+            <button onclick="showToast('Mengunduh rekapitulasi data kontrak format .XLSX')" class="px-2.5 sm:px-3 py-1.5 border border-slate-300 rounded text-[11px] sm:text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5">
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-600"></i> Excel
             </button>
-            <button onclick="openModal('modalKontrak')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-sm">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah Kontrak Baru
+            <button onclick="openModal('modalKontrak')" class="px-2.5 sm:px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 shadow-xs">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Kontrak Baru
             </button>
           </div>
         </div>
 
         <!-- Filter & Search Bar -->
-        <div class="bg-white p-3 rounded-lg border border-slate-200 flex flex-col sm:flex-row gap-3 items-center justify-between">
-          <div class="relative w-full sm:w-96">
+        <div class="bg-white p-3 rounded-lg border border-slate-200 flex flex-col sm:flex-row gap-2.5 items-center justify-between">
+          <div class="relative w-full sm:w-80">
             <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400"></i>
-            <input type="text" id="filterKontrakInput" onkeyup="searchTable('filterKontrakInput', 'tableKontrakMain')" placeholder="Cari nomor kontrak, nama rekanan, atau lingkup kerja..." class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
+            <input type="text" id="filterKontrakInput" onkeyup="searchTable('filterKontrakInput', 'tableKontrakMain')" placeholder="Cari nomor kontrak atau rekanan..." class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
           </div>
-          <div class="flex items-center gap-2 w-full sm:w-auto text-xs">
+          <div class="flex items-center gap-2 w-full sm:w-auto text-xs justify-end">
             <span class="text-slate-500 font-medium">Status:</span>
-            <select class="border border-slate-300 rounded px-2.5 py-1 text-slate-700 bg-white focus:outline-none">
-              <option value="">Semua Dokumen (14 Kontrak)</option>
-              <option value="aktif">Aktif Berjalan (12)</option>
-              <option value="warning">Mendekati Berakhir (2)</option>
+            <select class="border border-slate-300 rounded px-2 py-1 text-slate-700 bg-white focus:outline-none text-xs">
+              <option value="">Semua Dokumen</option>
+              <option value="aktif">Aktif Berjalan</option>
+              <option value="warning">Mendekati Berakhir</option>
             </select>
           </div>
         </div>
 
-        <!-- Tabel Kontrak Lengkap -->
-        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+        <!-- Tabel Kontrak Lengkap (Scrollable di HP) -->
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
           <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse" id="tableKontrakMain">
+            <table class="w-full text-left text-xs border-collapse min-w-[680px]" id="tableKontrakMain">
               <thead>
-                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[11px] uppercase tracking-wider">
+                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[10.5px] uppercase tracking-wider">
                   <th class="py-2.5 px-3">No. Dokumen / SPK</th>
                   <th class="py-2.5 px-3">Pihak Rekanan / Klien</th>
                   <th class="py-2.5 px-3">Lingkup Pekerjaan</th>
                   <th class="py-2.5 px-3 font-mono">Masa Kontrak</th>
                   <th class="py-2.5 px-3 text-right">Nilai Kontrak (Rp)</th>
                   <th class="py-2.5 px-3 text-center">Status</th>
-                  <th class="py-2.5 px-3 text-center">Berkas PDF</th>
+                  <th class="py-2.5 px-3 text-center">Berkas</th>
                   <th class="py-2.5 px-3 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100">
+              <tbody class="divide-y divide-slate-100 text-[11.5px]">
                 
-                <!-- Baris 1: PKS Petro Indo Energi -->
                 <tr class="hover:bg-slate-50/80 bg-rose-50/15">
-                  <td class="py-3 px-3 font-mono font-bold text-slate-800">072/PO-U/XI/2023</td>
-                  <td class="py-3 px-3">
+                  <td class="py-2.5 px-3 font-mono font-bold text-slate-800">072/PO-U/XI/2023</td>
+                  <td class="py-2.5 px-3">
                     <span class="font-bold text-slate-900 block">PT. Petro Indo Energi</span>
-                    <span class="text-[11px] text-slate-500">PIC: Ir. Bambang Sujatmiko (Procurement)</span>
+                    <span class="text-[10px] text-slate-500">PIC: Ir. Bambang Sujatmiko</span>
                   </td>
-                  <td class="py-3 px-3 text-slate-700">Pemeliharaan Berkala Unit Mesin Kompresor & Genset Lapangan Blok B</td>
-                  <td class="py-3 px-3 text-slate-600 font-mono text-[11px]">
-                    05 Des 2023 &mdash; 05 Des 2024
-                    <span class="block text-[10px] text-rose-600 font-bold">Sisa 14 Hari!</span>
+                  <td class="py-2.5 px-3 text-slate-700">Pemeliharaan Berkala Mesin Kompresor Lapangan</td>
+                  <td class="py-2.5 px-3 text-slate-600 font-mono text-[10.5px]">
+                    05 Des 2023 - 05 Des 2024
+                    <span class="block text-[9.5px] text-rose-600 font-bold">Sisa 14 Hari</span>
                   </td>
-                  <td class="py-3 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">145.000.000</td>
-                  <td class="py-3 px-3 text-center">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-300">
+                  <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">145.000.000</td>
+                  <td class="py-2.5 px-3 text-center">
+                    <span class="inline-block px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-amber-50 text-amber-900 border border-amber-300">
                       Masa Tenggang
                     </span>
                   </td>
-                  <td class="py-3 px-3 text-center">
-                    <button onclick="showToast('Membuka arsip PDF dokumen: PKS_PetroIndo_072.pdf')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded inline-flex items-center gap-1 font-mono text-[10.5px]">
-                      <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-600"></i> PDF
+                  <td class="py-2.5 px-3 text-center">
+                    <button onclick="showToast('Membuka arsip PDF dokumen: PKS_PetroIndo_072.pdf')" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded inline-flex items-center gap-1 font-mono text-[10px]">
+                      <i data-lucide="file-text" class="w-3 h-3 text-blue-600"></i> PDF
                     </button>
                   </td>
-                  <td class="py-3 px-3 text-right space-x-1">
-                    <button onclick="openDetailModal('PT. Petro Indo Energi', '072/PO-U/XI/2023', 'Rp 145.000.000', '05 Des 2023 s/d 05 Des 2024', 'Pemeliharaan Berkala Unit Mesin Kompresor & Genset Lapangan Blok B', 'Masa berlaku tersisa 14 hari. Perlu penerbitan addendum atau penandatanganan perpanjangan.')" class="px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-[11px] font-semibold">
+                  <td class="py-2.5 px-3 text-right space-x-1">
+                    <button onclick="openDetailModal('PT. Petro Indo Energi', '072/PO-U/XI/2023', 'Rp 145.000.000', '05 Des 2023 s/d 05 Des 2024', 'Pemeliharaan Unit Mesin Kompresor Lapangan Blok B', 'Masa berlaku tersisa 14 hari. Perlu penerbitan addendum atau penandatanganan perpanjangan.')" class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10.5px] font-semibold">
                       Detail
                     </button>
-                    <button onclick="openEditModal('PT. Petro Indo Energi', '072/PO-U/XI/2023', '145.000.000')" class="px-2 py-1 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded text-[11px]">
+                    <button onclick="openEditModal('PT. Petro Indo Energi', '072/PO-U/XI/2023', '145.000.000')" class="px-1.5 py-0.5 border border-slate-300 rounded text-[10.5px]">
                       Edit
                     </button>
                   </td>
                 </tr>
 
-                <!-- Baris 2: Mitra Logistik Bahari -->
                 <tr class="hover:bg-slate-50/80 bg-amber-50/15">
-                  <td class="py-3 px-3 font-mono font-bold text-slate-800">019/PKS/DIR/I/2024</td>
-                  <td class="py-3 px-3">
+                  <td class="py-2.5 px-3 font-mono font-bold text-slate-800">019/PKS/DIR/I/2024</td>
+                  <td class="py-2.5 px-3">
                     <span class="font-bold text-slate-900 block">PT. Mitra Logistik Bahari</span>
-                    <span class="text-[11px] text-slate-500">PIC: Ibu Farida (Operational Head)</span>
+                    <span class="text-[10px] text-slate-500">PIC: Ibu Farida</span>
                   </td>
-                  <td class="py-3 px-3 text-slate-700">Penyewaan Armada Traksi & Forklift Kapasitas 10 Ton Workshop Surabaya</td>
-                  <td class="py-3 px-3 text-slate-600 font-mono text-[11px]">
-                    19 Jan 2024 &mdash; 19 Des 2024
-                    <span class="block text-[10px] text-amber-700 font-bold">Sisa 28 Hari</span>
+                  <td class="py-2.5 px-3 text-slate-700">Penyewaan Armada Traksi & Forklift Kapasitas 10 Ton</td>
+                  <td class="py-2.5 px-3 text-slate-600 font-mono text-[10.5px]">
+                    19 Jan 2024 - 19 Des 2024
+                    <span class="block text-[9.5px] text-amber-700 font-bold">Sisa 28 Hari</span>
                   </td>
-                  <td class="py-3 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">220.000.000</td>
-                  <td class="py-3 px-3 text-center">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-300">
+                  <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">220.000.000</td>
+                  <td class="py-2.5 px-3 text-center">
+                    <span class="inline-block px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-amber-50 text-amber-900 border border-amber-300">
                       Masa Tenggang
                     </span>
                   </td>
-                  <td class="py-3 px-3 text-center">
-                    <button onclick="showToast('Membuka arsip PDF: PKS_MitraLogistik_019.pdf')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded inline-flex items-center gap-1 font-mono text-[10.5px]">
-                      <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-600"></i> PDF
+                  <td class="py-2.5 px-3 text-center">
+                    <button onclick="showToast('Membuka arsip PDF: PKS_MitraLogistik_019.pdf')" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded inline-flex items-center gap-1 font-mono text-[10px]">
+                      <i data-lucide="file-text" class="w-3 h-3 text-blue-600"></i> PDF
                     </button>
                   </td>
-                  <td class="py-3 px-3 text-right space-x-1">
-                    <button onclick="openDetailModal('PT. Mitra Logistik Bahari', '019/PKS/DIR/I/2024', 'Rp 220.000.000', '19 Jan 2024 s/d 19 Des 2024', 'Sewa Unit Traksi dan Forklift Kapasitas 10 Ton', 'Klien telah mengonfirmasi perpanjangan sewa untuk tahun 2025.')" class="px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-[11px] font-semibold">
+                  <td class="py-2.5 px-3 text-right space-x-1">
+                    <button onclick="openDetailModal('PT. Mitra Logistik Bahari', '019/PKS/DIR/I/2024', 'Rp 220.000.000', '19 Jan 2024 s/d 19 Des 2024', 'Sewa Unit Traksi dan Forklift Workshop Surabaya', 'Klien telah mengonfirmasi perpanjangan sewa untuk tahun 2025.')" class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10.5px] font-semibold">
                       Detail
                     </button>
-                    <button onclick="openEditModal('PT. Mitra Logistik Bahari', '019/PKS/DIR/I/2024', '220.000.000')" class="px-2 py-1 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded text-[11px]">
+                    <button onclick="openEditModal('PT. Mitra Logistik Bahari', '019/PKS/DIR/I/2024', '220.000.000')" class="px-1.5 py-0.5 border border-slate-300 rounded text-[10.5px]">
                       Edit
                     </button>
                   </td>
                 </tr>
 
-                <!-- Baris 3: Wijaya Karya Perkasa -->
                 <tr class="hover:bg-slate-50/80">
-                  <td class="py-3 px-3 font-mono font-bold text-slate-800">084/SPK/WKP/III/2024</td>
-                  <td class="py-3 px-3">
-                    <span class="font-bold text-slate-900 block">PT. Wijaya Karya Perkasa Tbk</span>
-                    <span class="text-[11px] text-slate-500">PIC: Hendra Gunawan (Site Manager)</span>
+                  <td class="py-2.5 px-3 font-mono font-bold text-slate-800">084/SPK/WKP/III/2024</td>
+                  <td class="py-2.5 px-3">
+                    <span class="font-bold text-slate-900 block">PT. Wijaya Karya Perkasa</span>
+                    <span class="text-[10px] text-slate-500">PIC: Hendra Gunawan</span>
                   </td>
-                  <td class="py-3 px-3 text-slate-700">Pengadaan Sistem Instrumentasi Hidrolik & Katup Kontrol Pabrik Cilegon</td>
-                  <td class="py-3 px-3 text-slate-600 font-mono text-[11px]">
-                    15 Mar 2024 &mdash; 15 Mar 2025
-                    <span class="block text-[10px] text-slate-400">Sisa 114 Hari</span>
+                  <td class="py-2.5 px-3 text-slate-700">Pengadaan Sistem Katup Kontrol Hidrolik Cilegon</td>
+                  <td class="py-2.5 px-3 text-slate-600 font-mono text-[10.5px]">
+                    15 Mar 2024 - 15 Mar 2025
+                    <span class="block text-[9.5px] text-slate-400">Sisa 114 Hari</span>
                   </td>
-                  <td class="py-3 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">780.000.000</td>
-                  <td class="py-3 px-3 text-center">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">780.000.000</td>
+                  <td class="py-2.5 px-3 text-center">
+                    <span class="inline-block px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                       Aktif Berjalan
                     </span>
                   </td>
-                  <td class="py-3 px-3 text-center">
-                    <button onclick="showToast('Membuka arsip PDF: SPK_WKP_084.pdf')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded inline-flex items-center gap-1 font-mono text-[10.5px]">
-                      <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-600"></i> PDF
+                  <td class="py-2.5 px-3 text-center">
+                    <button onclick="showToast('Membuka arsip PDF: SPK_WKP_084.pdf')" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded inline-flex items-center gap-1 font-mono text-[10px]">
+                      <i data-lucide="file-text" class="w-3 h-3 text-blue-600"></i> PDF
                     </button>
                   </td>
-                  <td class="py-3 px-3 text-right space-x-1">
-                    <button onclick="openDetailModal('PT. Wijaya Karya Perkasa Tbk', '084/SPK/WKP/III/2024', 'Rp 780.000.000', '15 Mar 2024 s/d 15 Mar 2025', 'Pengadaan Sistem Instrumentasi Hidrolik & Katup Kontrol', 'Progres pengiriman barang 100%, masa garansi 1 tahun berlaku.')" class="px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-[11px] font-semibold">
+                  <td class="py-2.5 px-3 text-right space-x-1">
+                    <button onclick="openDetailModal('PT. Wijaya Karya Perkasa Tbk', '084/SPK/WKP/III/2024', 'Rp 780.000.000', '15 Mar 2024 s/d 15 Mar 2025', 'Pengadaan Sistem Katup Kontrol Hidrolik', 'Progres pengiriman barang 100%, masa garansi 1 tahun berlaku.')" class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10.5px] font-semibold">
                       Detail
                     </button>
-                    <button onclick="openEditModal('PT. Wijaya Karya Perkasa Tbk', '084/SPK/WKP/III/2024', '780.000.000')" class="px-2 py-1 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded text-[11px]">
-                      Edit
-                    </button>
-                  </td>
-                </tr>
-
-                <!-- Baris 4: Sumber Makmur Mandiri -->
-                <tr class="hover:bg-slate-50/80">
-                  <td class="py-3 px-3 font-mono font-bold text-slate-800">102/PKS/SMM/V/2024</td>
-                  <td class="py-3 px-3">
-                    <span class="font-bold text-slate-900 block">CV. Sumber Makmur Mandiri</span>
-                    <span class="text-[11px] text-slate-500">PIC: Dedy Setiadi</span>
-                  </td>
-                  <td class="py-3 px-3 text-slate-700">Penyediaan Bahan Pelumas Industri & Filter Oli Heavy Equipment</td>
-                  <td class="py-3 px-3 text-slate-600 font-mono text-[11px]">
-                    01 Mei 2024 &mdash; 01 Mei 2025
-                    <span class="block text-[10px] text-slate-400">Sisa 161 Hari</span>
-                  </td>
-                  <td class="py-3 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">310.000.000</td>
-                  <td class="py-3 px-3 text-center">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                      Aktif Berjalan
-                    </span>
-                  </td>
-                  <td class="py-3 px-3 text-center">
-                    <button onclick="showToast('Membuka arsip PDF: PKS_SMM_102.pdf')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded inline-flex items-center gap-1 font-mono text-[10.5px]">
-                      <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-600"></i> PDF
-                    </button>
-                  </td>
-                  <td class="py-3 px-3 text-right space-x-1">
-                    <button onclick="openDetailModal('CV. Sumber Makmur Mandiri', '102/PKS/SMM/V/2024', 'Rp 310.000.000', '01 Mei 2024 s/d 01 Mei 2025', 'Penyediaan Bahan Pelumas Industri & Filter Oli', 'Pengiriman tahap 3 selesai dibayar.')" class="px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-[11px] font-semibold">
-                      Detail
-                    </button>
-                    <button onclick="openEditModal('CV. Sumber Makmur Mandiri', '102/PKS/SMM/V/2024', '310.000.000')" class="px-2 py-1 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded text-[11px]">
+                    <button onclick="openEditModal('PT. Wijaya Karya Perkasa Tbk', '084/SPK/WKP/III/2024', '780.000.000')" class="px-1.5 py-0.5 border border-slate-300 rounded text-[10.5px]">
                       Edit
                     </button>
                   </td>
@@ -642,72 +613,61 @@
               </tbody>
             </table>
           </div>
-
-          <!-- Table Footer -->
-          <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-            <span>Menampilkan 4 dari 14 dokumen kontrak aktif</span>
-            <div class="flex items-center gap-1">
-              <button class="px-2 py-1 border rounded bg-white text-slate-400 cursor-not-allowed">Sebelumnya</button>
-              <button class="px-2.5 py-1 border rounded bg-blue-600 text-white font-bold">1</button>
-              <button class="px-2.5 py-1 border rounded bg-white hover:bg-slate-50 text-slate-700">2</button>
-              <button class="px-2 py-1 border rounded bg-white hover:bg-slate-50 text-slate-700">Berikutnya</button>
-            </div>
-          </div>
         </div>
 
       </section>
 
       <!-- ======================================================== -->
-      <!-- TAB 3: ARSIP LEGALITAS PERUSAHAAN (NEW) -->
+      <!-- TAB 3: ARSIP LEGALITAS PERUSAHAAN -->
       <!-- ======================================================== -->
       <section id="tab-legal-docs" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div>
-            <h2 class="text-sm font-bold text-slate-900">Pusat Arsip Dokumen Legalitas & Perizinan Perusahaan</h2>
-            <p class="text-[11px] text-slate-500 mt-0.5">Penyimpanan terenkripsi dokumen legalitas resmi PT. Servo Indonesia Perkasa untuk kebutuhan audit dan tender.</p>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Arsip Dokumen Legalitas & Perizinan Perusahaan</h2>
+            <p class="text-[10.5px] sm:text-[11px] text-slate-500 mt-0.5">Penyimpanan terenkripsi dokumen legalitas resmi PT. Servo Indonesia Perkasa.</p>
           </div>
-          <button onclick="showToast('Fasilitas upload dokumen legalitas resmi')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-sm">
-            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Unggah Dokumen Legal
+          <button onclick="showToast('Fasilitas upload dokumen legalitas resmi')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-xs self-start sm:self-auto">
+            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Unggah Dokumen
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex items-start gap-3">
-            <div class="p-2.5 bg-blue-50 text-blue-700 rounded-lg shrink-0">
-              <i data-lucide="shield-check" class="w-5 h-5"></i>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs flex items-start gap-3">
+            <div class="p-2 bg-blue-50 text-blue-700 rounded-lg shrink-0">
+              <i data-lucide="shield-check" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </div>
             <div>
               <span class="font-bold text-slate-900 block text-xs">Akta Notaris & SK Kemenkumham</span>
-              <p class="text-[11px] text-slate-500 mt-0.5">AHU-0019284.AH.01.02.TAHUN 2021</p>
-              <button onclick="showToast('Membuka salinan resmi Akta Notaris')" class="mt-2 text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1">
-                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Lihat Dokumen
+              <p class="text-[10.5px] text-slate-500 mt-0.5 font-mono">AHU-0019284.AH.01.02.2021</p>
+              <button onclick="showToast('Membuka salinan resmi Akta Notaris')" class="mt-1.5 text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1">
+                <i data-lucide="file-text" class="w-3 h-3"></i> Buka File
               </button>
             </div>
           </div>
 
-          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex items-start gap-3">
-            <div class="p-2.5 bg-emerald-50 text-emerald-700 rounded-lg shrink-0">
-              <i data-lucide="award" class="w-5 h-5"></i>
+          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs flex items-start gap-3">
+            <div class="p-2 bg-emerald-50 text-emerald-700 rounded-lg shrink-0">
+              <i data-lucide="award" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </div>
             <div>
               <span class="font-bold text-slate-900 block text-xs">NIB Berbasis Risiko (OSS RBA)</span>
-              <p class="text-[11px] text-slate-500 mt-0.5">No: 1209210039281 (KBLI 46591 & 33141)</p>
-              <button onclick="showToast('Membuka sertifikat NIB')" class="mt-2 text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1">
-                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Lihat Dokumen
+              <p class="text-[10.5px] text-slate-500 mt-0.5 font-mono">No: 1209210039281</p>
+              <button onclick="showToast('Membuka sertifikat NIB')" class="mt-1.5 text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1">
+                <i data-lucide="file-text" class="w-3 h-3"></i> Buka File
               </button>
             </div>
           </div>
 
-          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex items-start gap-3">
-            <div class="p-2.5 bg-amber-50 text-amber-700 rounded-lg shrink-0">
-              <i data-lucide="file-badge" class="w-5 h-5"></i>
+          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs flex items-start gap-3">
+            <div class="p-2 bg-amber-50 text-amber-700 rounded-lg shrink-0">
+              <i data-lucide="file-badge" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </div>
             <div>
               <span class="font-bold text-slate-900 block text-xs">NPWP Badan & SPPKP Pajak</span>
-              <p class="text-[11px] text-slate-500 mt-0.5">NPWP: 42.189.201.4-012.000 (KPP Pratama)</p>
-              <button onclick="showToast('Membuka SKT Pajak')" class="mt-2 text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1">
-                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Lihat Dokumen
+              <p class="text-[10.5px] text-slate-500 mt-0.5 font-mono">42.189.201.4-012.000</p>
+              <button onclick="showToast('Membuka SKT Pajak')" class="mt-1.5 text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1">
+                <i data-lucide="file-text" class="w-3 h-3"></i> Buka File
               </button>
             </div>
           </div>
@@ -720,111 +680,83 @@
       <!-- ======================================================== -->
       <section id="tab-finance" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div>
-            <h2 class="text-sm font-bold text-slate-900">Manajemen Faktur Tagihan (Invoice) & Kontrol Arus Kas Masuk</h2>
-            <p class="text-[11px] text-slate-500 mt-0.5">Pemantauan nomor invoice resmi, batas jatuh tempo per termin, kwitansi pembayaran, dan saldo piutang.</p>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Faktur Tagihan (Invoice) & Kontrol Arus Kas Masuk</h2>
+            <p class="text-[10.5px] sm:text-[11px] text-slate-500 mt-0.5">Pemantauan nomor invoice resmi, batas jatuh tempo per termin, kwitansi pembayaran, dan piutang.</p>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="openModal('modalInvoice')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-sm">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Buat Invoice Baru
-            </button>
+          <button onclick="openModal('modalInvoice')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-xs self-start sm:self-auto">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Buat Invoice
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-xs">
+            <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Total Tagihan (Q4)</span>
+            <p class="text-base sm:text-lg font-bold text-slate-900 font-mono mt-0.5">Rp 1.405.000.000</p>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 border-l-4 border-l-emerald-500 shadow-xs">
+            <span class="text-[10px] text-emerald-700 font-bold uppercase tracking-wider">Pembayaran Lunas</span>
+            <p class="text-base sm:text-lg font-bold text-emerald-800 font-mono mt-0.5">Rp 1.120.000.000</p>
+          </div>
+          <div class="bg-white p-3 rounded-lg border border-slate-200 border-l-4 border-l-rose-500 shadow-xs">
+            <span class="text-[10px] text-rose-700 font-bold uppercase tracking-wider">Piutang Menunggu</span>
+            <p class="text-base sm:text-lg font-bold text-rose-800 font-mono mt-0.5">Rp 285.000.000</p>
           </div>
         </div>
 
-        <!-- Summary Cards Finance -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm">
-            <span class="text-[11px] text-slate-500 font-bold uppercase tracking-wider">Total Tagihan Beredar (Q4)</span>
-            <p class="text-lg font-bold text-slate-900 font-mono mt-0.5">Rp 1.405.000.000</p>
-          </div>
-          <div class="bg-white p-3.5 rounded-lg border border-slate-200 border-l-4 border-l-emerald-500 shadow-sm">
-            <span class="text-[11px] text-emerald-700 font-bold uppercase tracking-wider">Pembayaran Lunas Masuk</span>
-            <p class="text-lg font-bold text-emerald-800 font-mono mt-0.5">Rp 1.120.000.000</p>
-          </div>
-          <div class="bg-white p-3.5 rounded-lg border border-slate-200 border-l-4 border-l-rose-500 shadow-sm">
-            <span class="text-[11px] text-rose-700 font-bold uppercase tracking-wider">Piutang Menunggu Pelunasan</span>
-            <p class="text-lg font-bold text-rose-800 font-mono mt-0.5">Rp 285.000.000</p>
-          </div>
-        </div>
-
-        <!-- Tabel Faktur Lengkap -->
-        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+        <!-- Tabel Faktur (Scrollable di HP) -->
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
           <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
+            <table class="w-full text-left text-xs border-collapse min-w-[640px]">
               <thead>
-                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[11px] uppercase tracking-wider">
+                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[10.5px] uppercase tracking-wider">
                   <th class="py-2.5 px-3">No. Faktur</th>
                   <th class="py-2.5 px-3">Nama Klien / Rekanan</th>
-                  <th class="py-2.5 px-3">Uraian Termin Pembayaran</th>
-                  <th class="py-2.5 px-3 font-mono">Tgl Terbit</th>
+                  <th class="py-2.5 px-3">Uraian Termin</th>
                   <th class="py-2.5 px-3 font-mono">Jatuh Tempo</th>
-                  <th class="py-2.5 px-3 text-right">Nominal Tagihan (Rp)</th>
+                  <th class="py-2.5 px-3 text-right">Nominal (Rp)</th>
                   <th class="py-2.5 px-3 text-center">Status</th>
                   <th class="py-2.5 px-3 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100">
+              <tbody class="divide-y divide-slate-100 text-[11.5px]">
                 
-                <!-- Invoice 1 -->
                 <tr class="hover:bg-slate-50/80">
-                  <td class="py-3 px-3 font-mono font-bold text-slate-800">INV/SIP/2024/XI/0104</td>
-                  <td class="py-3 px-3 font-bold text-slate-900">PT. Wijaya Karya Perkasa Tbk</td>
-                  <td class="py-3 px-3 text-slate-600">Termin 1 (Uang Muka 40%) - SPK 084</td>
-                  <td class="py-3 px-3 font-mono text-slate-500">02 Nov 2024</td>
-                  <td class="py-3 px-3 font-mono text-slate-500">16 Nov 2024</td>
-                  <td class="py-3 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">312.000.000</td>
-                  <td class="py-3 px-3 text-center">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  <td class="py-2.5 px-3 font-mono font-bold text-slate-800">INV/SIP/2024/XI/0104</td>
+                  <td class="py-2.5 px-3 font-bold text-slate-900">PT. Wijaya Karya Perkasa</td>
+                  <td class="py-2.5 px-3 text-slate-600">Termin 1 (Uang Muka 40%)</td>
+                  <td class="py-2.5 px-3 font-mono text-slate-500">16 Nov 2024</td>
+                  <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">312.000.000</td>
+                  <td class="py-2.5 px-3 text-center">
+                    <span class="inline-block px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
                       LUNAS
                     </span>
                   </td>
-                  <td class="py-3 px-3 text-right">
-                    <button onclick="openKwitansiModal('INV/SIP/2024/XI/0104', 'PT. Wijaya Karya Perkasa Tbk', 'Rp 312.000.000,-', 'Pembayaran Termin 1 (Uang Muka 40%) Pengadaan Sistem Katup Hidrolik', '08 Nov 2024')" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded text-[11px] font-semibold">
-                      Cetak Kwitansi
+                  <td class="py-2.5 px-3 text-right">
+                    <button onclick="openKwitansiModal('INV/SIP/2024/XI/0104', 'PT. Wijaya Karya Perkasa Tbk', 'Rp 312.000.000,-', 'Pembayaran Termin 1 (Uang Muka 40%) Pengadaan Sistem Katup Hidrolik', '08 Nov 2024')" class="px-2 py-0.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded text-[10.5px] font-semibold">
+                      Kwitansi
                     </button>
                   </td>
                 </tr>
 
-                <!-- Invoice 2 (Overdue) -->
                 <tr class="hover:bg-slate-50/80 bg-rose-50/20">
-                  <td class="py-3 px-3 font-mono font-bold text-rose-700">INV/SIP/2024/XI/0112</td>
-                  <td class="py-3 px-3 font-bold text-slate-900">PT. Petro Indo Energi</td>
-                  <td class="py-3 px-3 text-slate-600">Biaya Maintenance Bulanan (Periode Oktober)</td>
-                  <td class="py-3 px-3 font-mono text-slate-500">01 Nov 2024</td>
-                  <td class="py-3 px-3 font-mono text-rose-600 font-bold">15 Nov 2024 (Telat)</td>
-                  <td class="py-3 px-3 text-right font-mono font-bold text-rose-700 tabular-nums">85.000.000</td>
-                  <td class="py-3 px-3 text-center">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                  <td class="py-2.5 px-3 font-mono font-bold text-rose-700">INV/SIP/2024/XI/0112</td>
+                  <td class="py-2.5 px-3 font-bold text-slate-900">PT. Petro Indo Energi</td>
+                  <td class="py-2.5 px-3 text-slate-600">Biaya Maintenance Bulanan (Okt)</td>
+                  <td class="py-2.5 px-3 font-mono text-rose-600 font-bold">15 Nov (Telat)</td>
+                  <td class="py-2.5 px-3 text-right font-mono font-bold text-rose-700 tabular-nums">85.000.000</td>
+                  <td class="py-2.5 px-3 text-center">
+                    <span class="inline-block px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
                       JATUH TEMPO
                     </span>
                   </td>
-                  <td class="py-3 px-3 text-right space-x-1">
-                    <button onclick="showToast('Surat tagihan / reminder resmi dikirim ke finance PT. Petro Indo Energi')" class="px-2 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded text-[10.5px] font-semibold">
-                      Kirim Reminder
+                  <td class="py-2.5 px-3 text-right space-x-1">
+                    <button onclick="showToast('Surat reminder tagihan dikirim ke PT. Petro Indo')" class="px-1.5 py-0.5 bg-rose-600 text-white rounded text-[10px] font-semibold">
+                      Reminder
                     </button>
-                    <button onclick="markInvoicePaid(this)" class="px-2 py-1 border border-slate-300 hover:bg-slate-100 rounded text-[10.5px] font-medium text-slate-700">
-                      Tandai Lunas
-                    </button>
-                  </td>
-                </tr>
-
-                <!-- Invoice 3 (Pending) -->
-                <tr class="hover:bg-slate-50/80">
-                  <td class="py-3 px-3 font-mono font-bold text-slate-800">INV/SIP/2024/XI/0118</td>
-                  <td class="py-3 px-3 font-bold text-slate-900">PT. Mitra Logistik Bahari</td>
-                  <td class="py-3 px-3 text-slate-600">Sewa Traksi & Forklift Periode November</td>
-                  <td class="py-3 px-3 font-mono text-slate-500">18 Nov 2024</td>
-                  <td class="py-3 px-3 font-mono text-slate-500">02 Des 2024</td>
-                  <td class="py-3 px-3 text-right font-mono font-bold text-slate-900 tabular-nums">200.000.000</td>
-                  <td class="py-3 px-3 text-center">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-300">
-                      MENUNGGU BAYAR
-                    </span>
-                  </td>
-                  <td class="py-3 px-3 text-right">
-                    <button onclick="markInvoicePaid(this)" class="px-2 py-1 border border-slate-300 hover:bg-slate-100 rounded text-[10.5px] font-medium text-slate-700">
-                      Tandai Lunas
+                    <button onclick="markInvoicePaid(this)" class="px-1.5 py-0.5 border border-slate-300 rounded text-[10px]">
+                      Lunas
                     </button>
                   </td>
                 </tr>
@@ -837,52 +769,45 @@
       </section>
 
       <!-- ======================================================== -->
-      <!-- TAB 5: BUKU KAS & REKONSILIASI BANK (NEW) -->
+      <!-- TAB 5: BUKU KAS & REKONSILIASI BANK -->
       <!-- ======================================================== -->
       <section id="tab-kas-masuk" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div>
-            <h2 class="text-sm font-bold text-slate-900">Buku Kas & Rekonsiliasi Rekening Bank Perusahaan</h2>
-            <p class="text-[11px] text-slate-500 mt-0.5">Catatan mutasi penerimaan pembayaran resmi pada rekening operasional BCA & Mandiri PT. Servo Indonesia Perkasa.</p>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Buku Kas & Rekonsiliasi Rekening Bank</h2>
+            <p class="text-[10.5px] sm:text-[11px] text-slate-500 mt-0.5">Catatan mutasi penerimaan pembayaran pada rekening resmi BCA & Mandiri PT. Servo Indonesia Perkasa.</p>
           </div>
-          <button onclick="showToast('Sinkronisasi mutasi rekening koran')" class="px-3 py-1.5 border border-slate-300 rounded text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5">
-            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-blue-600"></i> Sinkronisasi Mutasi
+          <button onclick="showToast('Sinkronisasi mutasi rekening berhasil')" class="px-3 py-1.5 border border-slate-300 rounded text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 self-start sm:self-auto">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-blue-600"></i> Sync Mutasi
           </button>
         </div>
 
-        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[11px]">
-                <th class="py-2.5 px-3">Tgl Mutasi</th>
-                <th class="py-2.5 px-3">Rekening Bank</th>
-                <th class="py-2.5 px-3">Uraian Transaksi & Sumber</th>
-                <th class="py-2.5 px-3 text-right">Nominal Masuk (Rp)</th>
-                <th class="py-2.5 px-3 text-center">Status Validasi</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-              <tr class="hover:bg-slate-50/80">
-                <td class="py-3 px-3 font-mono text-slate-500">08 Nov 2024</td>
-                <td class="py-3 px-3 font-semibold text-slate-800">BCA Giro: 829-019-2811</td>
-                <td class="py-3 px-3">TRSF PT WIJAYA KARYA PERKASA - PELUNASAN TERMIN 1</td>
-                <td class="py-3 px-3 text-right font-mono font-bold text-emerald-700">312.000.000</td>
-                <td class="py-3 px-3 text-center">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">Terverifikasi</span>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50/80">
-                <td class="py-3 px-3 font-mono text-slate-500">01 Nov 2024</td>
-                <td class="py-3 px-3 font-semibold text-slate-800">Mandiri Giro: 137-00-1928371-2</td>
-                <td class="py-3 px-3">TRSF CV SUMBER MAKMUR - PENGADAAN FILTER TAHAP 2</td>
-                <td class="py-3 px-3 text-right font-mono font-bold text-emerald-700">110.000.000</td>
-                <td class="py-3 px-3 text-center">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">Terverifikasi</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse min-w-[560px]">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[10.5px]">
+                  <th class="py-2 px-3">Tgl Mutasi</th>
+                  <th class="py-2 px-3">Rekening Bank</th>
+                  <th class="py-2 px-3">Uraian Transaksi</th>
+                  <th class="py-2 px-3 text-right">Nominal Masuk (Rp)</th>
+                  <th class="py-2 px-3 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-[11.5px]">
+                <tr class="hover:bg-slate-50/80">
+                  <td class="py-2.5 px-3 font-mono text-slate-500">08 Nov 2024</td>
+                  <td class="py-2.5 px-3 font-semibold text-slate-800">BCA Giro: 829-019-2811</td>
+                  <td class="py-2.5 px-3">TRSF PT WIJAYA KARYA - TERMIN 1</td>
+                  <td class="py-2.5 px-3 text-right font-mono font-bold text-emerald-700">312.000.000</td>
+                  <td class="py-2.5 px-3 text-center">
+                    <span class="px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">Valid</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
       </section>
@@ -892,88 +817,46 @@
       <!-- ======================================================== -->
       <section id="tab-hr" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div>
-            <h2 class="text-sm font-bold text-slate-900">Administrasi Operasional, Permohonan Izin & Cuti Digital</h2>
-            <p class="text-[11px] text-slate-500 mt-0.5">Sistem pengajuan mandiri karyawan, verifikasi surat keterangan sakit, dan penerbitan Surat Perintah Tugas (SPT).</p>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Permohonan Izin & Cuti Digital</h2>
+            <p class="text-[10.5px] sm:text-[11px] text-slate-500 mt-0.5">Sistem pengajuan mandiri staf, verifikasi surat sakit, dan approval bertingkat.</p>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="openModal('modalCuti')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-sm">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Buat Permohonan Baru
-            </button>
-          </div>
+          <button onclick="openModal('modalCuti')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-xs self-start sm:self-auto">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Ajukan Cuti/Izin
+          </button>
         </div>
 
-        <!-- Tabel Riwayat HR -->
-        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
           <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
+            <table class="w-full text-left text-xs border-collapse min-w-[580px]">
               <thead>
-                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[11px] uppercase tracking-wider">
-                  <th class="py-2.5 px-3">Tgl Diajukan</th>
-                  <th class="py-2.5 px-3">Nama Pegawai & NIK</th>
-                  <th class="py-2.5 px-3">Divisi / Penempatan</th>
-                  <th class="py-2.5 px-3">Jenis Permohonan</th>
-                  <th class="py-2.5 px-3">Durasi Jadwal</th>
-                  <th class="py-2.5 px-3">Keperluan / Keterangan</th>
-                  <th class="py-2.5 px-3 text-center">Status Verifikasi</th>
-                  <th class="py-2.5 px-3 text-right">Aksi</th>
+                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[10.5px] uppercase tracking-wider">
+                  <th class="py-2 px-3">Tgl Pengajuan</th>
+                  <th class="py-2 px-3">Nama Pegawai</th>
+                  <th class="py-2 px-3">Divisi</th>
+                  <th class="py-2 px-3">Jenis</th>
+                  <th class="py-2 px-3">Durasi</th>
+                  <th class="py-2 px-3 text-center">Status</th>
+                  <th class="py-2 px-3 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100">
-                
+              <tbody class="divide-y divide-slate-100 text-[11.5px]">
                 <tr class="hover:bg-slate-50/80">
-                  <td class="py-3 px-3 font-mono text-slate-500">20 Nov 2024</td>
-                  <td class="py-3 px-3">
-                    <span class="font-bold text-slate-900 block">Dina Safitri</span>
-                    <span class="text-[10px] text-slate-400 font-mono">NIK: 2022-044</span>
+                  <td class="py-2.5 px-3 font-mono text-slate-500">20 Nov 2024</td>
+                  <td class="py-2.5 px-3 font-bold text-slate-900">Dina Safitri</td>
+                  <td class="py-2.5 px-3 text-slate-700">Finance & Tax</td>
+                  <td class="py-2.5 px-3">
+                    <span class="inline-block px-1.5 py-0.5 rounded text-[9.5px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">Cuti</span>
                   </td>
-                  <td class="py-3 px-3 text-slate-700">Finance & Tax</td>
-                  <td class="py-3 px-3">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">
-                      Cuti Tahunan
-                    </span>
+                  <td class="py-2.5 px-3 font-mono">3 Hari (25-27 Nov)</td>
+                  <td class="py-2.5 px-3 text-center">
+                    <span class="inline-block px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-amber-50 text-amber-900 border border-amber-300">Review Manager</span>
                   </td>
-                  <td class="py-3 px-3 font-mono text-slate-700">3 Hari (25 - 27 Nov)</td>
-                  <td class="py-3 px-3 text-slate-600">Keperluan keluarga di luar kota</td>
-                  <td class="py-3 px-3 text-center">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-300">
-                      Menunggu Manager
-                    </span>
-                  </td>
-                  <td class="py-3 px-3 text-right">
-                    <button onclick="showToast('Menampilkan rincian form pengajuan cuti digital')" class="text-blue-600 hover:underline font-semibold text-[11px]">
-                      Detail Form
-                    </button>
+                  <td class="py-2.5 px-3 text-right">
+                    <button onclick="showToast('Menampilkan rincian form cuti digital')" class="text-blue-600 hover:underline font-semibold text-[11px]">Detail</button>
                   </td>
                 </tr>
-
-                <tr class="hover:bg-slate-50/80">
-                  <td class="py-3 px-3 font-mono text-slate-500">17 Nov 2024</td>
-                  <td class="py-3 px-3">
-                    <span class="font-bold text-slate-900 block">Rian Pratama</span>
-                    <span class="text-[10px] text-slate-400 font-mono">NIK: 2023-091</span>
-                  </td>
-                  <td class="py-3 px-3 text-slate-700">Staff Operasional</td>
-                  <td class="py-3 px-3">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      Izin Sakit
-                    </span>
-                  </td>
-                  <td class="py-3 px-3 font-mono text-slate-700">1 Hari (18 Nov)</td>
-                  <td class="py-3 px-3 text-slate-600">Surat keterangan dokter terlampir (PDF)</td>
-                  <td class="py-3 px-3 text-center">
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                      Disetujui Penuh
-                    </span>
-                  </td>
-                  <td class="py-3 px-3 text-right">
-                    <button onclick="showToast('Menampilkan arsip surat dokter')" class="text-blue-600 hover:underline font-semibold text-[11px]">
-                      Lihat Berkas
-                    </button>
-                  </td>
-                </tr>
-
               </tbody>
             </table>
           </div>
@@ -982,118 +865,110 @@
       </section>
 
       <!-- ======================================================== -->
-      <!-- TAB 7: SURAT TUGAS DINAS (SPT) (NEW) -->
+      <!-- TAB 7: SURAT TUGAS DINAS (SPT) -->
       <!-- ======================================================== -->
       <section id="tab-spt" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div>
-            <h2 class="text-sm font-bold text-slate-900">Surat Perintah Tugas Luar Kota (SPT) & Perjalanan Dinas</h2>
-            <p class="text-[11px] text-slate-500 mt-0.5">Penerbitan surat tugas resmi bagi teknisi mekanikal, workshop, dan supervisi lapangan PT. Servo Indonesia Perkasa.</p>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Surat Perintah Tugas Luar Kota (SPT)</h2>
+            <p class="text-[10.5px] sm:text-[11px] text-slate-500 mt-0.5">Penerbitan surat tugas resmi bagi teknisi mekanikal lapangan PT. Servo Indonesia Perkasa.</p>
           </div>
-          <button onclick="showToast('Form penerbitan SPT dinas baru')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-sm">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Terbitkan SPT Baru
+          <button onclick="showToast('Form penerbitan SPT dinas baru')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-xs self-start sm:self-auto">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Terbitkan SPT
           </button>
         </div>
 
-        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[11px]">
-                <th class="py-2.5 px-3">No. SPT Resmi</th>
-                <th class="py-2.5 px-3">Nama Petugas / Tim</th>
-                <th class="py-2.5 px-3">Lokasi Dinas Tujuan</th>
-                <th class="py-2.5 px-3 font-mono">Jadwal Penugasan</th>
-                <th class="py-2.5 px-3">Keperluan Tugas</th>
-                <th class="py-2.5 px-3 text-center">Status TTD Direksi</th>
-                <th class="py-2.5 px-3 text-right">Dokumen</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-              <tr class="hover:bg-slate-50/80">
-                <td class="py-3 px-3 font-mono font-bold text-slate-800">SPT/SIP/2024/XI/082</td>
-                <td class="py-3 px-3">
-                  <span class="font-bold text-slate-900 block">Bambang Irawan</span>
-                  <span class="text-[10px] text-slate-500">Teknisi Senior Mekanikal</span>
-                </td>
-                <td class="py-3 px-3 text-slate-700">Workshop & Depo Cilegon</td>
-                <td class="py-3 px-3 font-mono text-slate-600">21 Nov &mdash; 22 Nov 2024</td>
-                <td class="py-3 px-3 text-slate-600">Inspeksi teknis katup hidrolik pesanan PT. Wijaya Karya</td>
-                <td class="py-3 px-3 text-center">
-                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">Disetujui Direktur</span>
-                </td>
-                <td class="py-3 px-3 text-right">
-                  <button onclick="showToast('Mencetak Surat Perintah Tugas resmi bertanda tangan')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 rounded text-[11px] font-semibold text-slate-700">
-                    Cetak SPT
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse min-w-[580px]">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[10.5px]">
+                  <th class="py-2 px-3">No. SPT</th>
+                  <th class="py-2 px-3">Nama Petugas</th>
+                  <th class="py-2 px-3">Lokasi Dinas</th>
+                  <th class="py-2 px-3 font-mono">Jadwal</th>
+                  <th class="py-2 px-3 text-center">Status TTD</th>
+                  <th class="py-2 px-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-[11.5px]">
+                <tr class="hover:bg-slate-50/80">
+                  <td class="py-2.5 px-3 font-mono font-bold text-slate-800">SPT/SIP/2024/XI/082</td>
+                  <td class="py-2.5 px-3 font-bold text-slate-900">Bambang Irawan</td>
+                  <td class="py-2.5 px-3 text-slate-700">Workshop Cilegon</td>
+                  <td class="py-2.5 px-3 font-mono text-slate-600">21 - 22 Nov 2024</td>
+                  <td class="py-2.5 px-3 text-center">
+                    <span class="px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-blue-50 text-blue-800 border border-blue-200">ACC Direktur</span>
+                  </td>
+                  <td class="py-2.5 px-3 text-right">
+                    <button onclick="showToast('Mencetak SPT resmi bertanda tangan')" class="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 rounded text-[10.5px] font-semibold text-slate-700">Cetak</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
       </section>
 
       <!-- ======================================================== -->
-      <!-- TAB 8: DIREKTORI TIM & KARYAWAN (NEW) -->
+      <!-- TAB 8: DIREKTORI TIM & KARYAWAN -->
       <!-- ======================================================== -->
       <section id="tab-karyawan" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
           <div>
-            <h2 class="text-sm font-bold text-slate-900">Direktori Karyawan & Penempatan Tim Lapangan</h2>
-            <p class="text-[11px] text-slate-500 mt-0.5">Database staf aktif PT. Servo Indonesia Perkasa, jabatan struktural, dan alokasi divisi proyek.</p>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Direktori Tim & Karyawan Perusahaan</h2>
+            <p class="text-[10.5px] sm:text-[11px] text-slate-500 mt-0.5">Database staf aktif PT. Servo Indonesia Perkasa dan wewenang operasional.</p>
           </div>
-          <button onclick="showToast('Pendaftaran data staf baru')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+          <button onclick="showToast('Pendaftaran data staf baru')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-xs self-start sm:self-auto">
             <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Tambah Karyawan
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-xs shrink-0">
                 BS
               </div>
-              <div>
-                <p class="font-bold text-slate-900 text-xs">Budi Santoso, S.E.</p>
-                <p class="text-[11px] text-blue-600 font-medium">Direksi Utama</p>
+              <div class="min-w-0">
+                <p class="font-bold text-slate-900 text-xs truncate">Budi Santoso, S.E.</p>
+                <p class="text-[10.5px] text-blue-600 font-medium">Direksi Utama</p>
               </div>
             </div>
-            <div class="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-500 space-y-1">
-              <p>Email: <span class="text-slate-800 font-mono">direksi@servo-indonesia.com</span></p>
-              <p>Wewenang: <span class="text-slate-800 font-semibold">Otorisasi Akhir & Finansial</span></p>
+            <div class="mt-2.5 pt-2 border-t border-slate-100 text-[10.5px] text-slate-500">
+              <p>Wewenang: <span class="text-slate-800 font-semibold">Otorisasi Akhir</span></p>
             </div>
           </div>
 
-          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold text-xs">
+          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
                 MK
               </div>
-              <div>
-                <p class="font-bold text-slate-900 text-xs">Maya Kartika, S.T.</p>
-                <p class="text-[11px] text-blue-600 font-medium">Manager Operasional</p>
+              <div class="min-w-0">
+                <p class="font-bold text-slate-900 text-xs truncate">Maya Kartika, S.T.</p>
+                <p class="text-[10.5px] text-blue-600 font-medium">Manager Operasional</p>
               </div>
             </div>
-            <div class="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-500 space-y-1">
-              <p>Email: <span class="text-slate-800 font-mono">ops@servo-indonesia.com</span></p>
-              <p>Wewenang: <span class="text-slate-800 font-semibold">Review & Verifikasi Lapangan</span></p>
+            <div class="mt-2.5 pt-2 border-t border-slate-100 text-[10.5px] text-slate-500">
+              <p>Wewenang: <span class="text-slate-800 font-semibold">Verifikasi Lapangan</span></p>
             </div>
           </div>
 
-          <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-slate-600 text-white flex items-center justify-center font-bold text-xs">
+          <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs sm:col-span-2 md:col-span-1">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-slate-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
                 DS
               </div>
-              <div>
-                <p class="font-bold text-slate-900 text-xs">Dina Safitri</p>
-                <p class="text-[11px] text-slate-600 font-medium">Finance & Tax Officer</p>
+              <div class="min-w-0">
+                <p class="font-bold text-slate-900 text-xs truncate">Dina Safitri</p>
+                <p class="text-[10.5px] text-slate-600 font-medium">Finance Officer</p>
               </div>
             </div>
-            <div class="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-500 space-y-1">
-              <p>Email: <span class="text-slate-800 font-mono">finance@servo-indonesia.com</span></p>
+            <div class="mt-2.5 pt-2 border-t border-slate-100 text-[10.5px] text-slate-500">
               <p>Wewenang: <span class="text-slate-800 font-semibold">Entri Invoice & Pajak</span></p>
             </div>
           </div>
@@ -1102,41 +977,39 @@
       </section>
 
       <!-- ======================================================== -->
-      <!-- TAB 9: PUSAT LAPORAN & REKAPITULASI (NEW) -->
+      <!-- TAB 9: PUSAT LAPORAN & REKAPITULASI -->
       <!-- ======================================================== -->
       <section id="tab-laporan" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 shadow-xs">
           <div class="flex items-center gap-2 mb-1">
             <i data-lucide="file-pie-chart" class="w-4 h-4 text-blue-600"></i>
-            <h2 class="text-sm font-bold text-slate-900">Pusat Laporan & Rekapitulasi Dokumen Perusahaan</h2>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Pusat Laporan & Rekapitulasi Dokumen</h2>
           </div>
-          <p class="text-xs text-slate-500">
-            Ekspor rekapitulasi data operasional ke dalam format Excel (.xlsx) atau PDF untuk keperluan rapat direksi dan laporan perpajakan.
-          </p>
+          <p class="text-[11px] text-slate-500">Ekspor rekapitulasi data operasional ke Excel (.xlsx) atau PDF untuk keperluan rapat direksi.</p>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <div class="p-4 border rounded-lg border-slate-200 bg-slate-50">
-              <span class="font-bold text-slate-900 text-xs block">Laporan Realisasi Kontrak (Tahunan)</span>
-              <p class="text-[11px] text-slate-500 mt-1">Rekap seluruh kontrak kerja sama aktif, selesai, dan adendum nilai proyek.</p>
-              <button onclick="showToast('Mengunduh Laporan_Kontrak_2024.xlsx')" class="mt-3 px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-xs">
-                <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh Excel
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+            <div class="p-3 border rounded-lg border-slate-200 bg-slate-50">
+              <span class="font-bold text-slate-900 text-xs block">Laporan Realisasi Kontrak</span>
+              <p class="text-[10.5px] text-slate-500 mt-0.5">Rekapitulasi seluruh kontrak rekanan tahun 2024.</p>
+              <button onclick="showToast('Mengunduh Laporan_Kontrak.xlsx')" class="mt-2.5 px-2.5 py-1 bg-blue-600 text-white rounded text-[11px] font-semibold flex items-center gap-1.5 shadow-xs">
+                <i data-lucide="download" class="w-3 h-3"></i> Unduh Excel
               </button>
             </div>
 
-            <div class="p-4 border rounded-lg border-slate-200 bg-slate-50">
-              <span class="font-bold text-slate-900 text-xs block">Laporan Rekapitulasi Piutang & Kas</span>
-              <p class="text-[11px] text-slate-500 mt-1">Daftar umur piutang (*aging AR*) dan jadwal jatuh tempo tagihan rekanan.</p>
-              <button onclick="showToast('Mengunduh Laporan_Piutang_Q4.xlsx')" class="mt-3 px-3 py-1.5 bg-emerald-600 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-xs">
-                <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh Excel
+            <div class="p-3 border rounded-lg border-slate-200 bg-slate-50">
+              <span class="font-bold text-slate-900 text-xs block">Laporan Piutang & Kas</span>
+              <p class="text-[10.5px] text-slate-500 mt-0.5">Daftar umur piutang dan jadwal jatuh tempo.</p>
+              <button onclick="showToast('Mengunduh Laporan_Piutang.xlsx')" class="mt-2.5 px-2.5 py-1 bg-emerald-600 text-white rounded text-[11px] font-semibold flex items-center gap-1.5 shadow-xs">
+                <i data-lucide="download" class="w-3 h-3"></i> Unduh Excel
               </button>
             </div>
 
-            <div class="p-4 border rounded-lg border-slate-200 bg-slate-50">
-              <span class="font-bold text-slate-900 text-xs block">Rekap Kehadiran & Surat Tugas (SPT)</span>
-              <p class="text-[11px] text-slate-500 mt-1">Rekapitulasi cuti tahunan, izin sakit, dan laporan perjalanan dinas luar kota.</p>
-              <button onclick="showToast('Mengunduh Laporan_SDM_2024.pdf')" class="mt-3 px-3 py-1.5 bg-slate-800 text-white rounded text-xs font-semibold flex items-center gap-1.5 shadow-xs">
-                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Unduh PDF
+            <div class="p-3 border rounded-lg border-slate-200 bg-slate-50">
+              <span class="font-bold text-slate-900 text-xs block">Rekap Kehadiran & SPT</span>
+              <p class="text-[10.5px] text-slate-500 mt-0.5">Rekapitulasi cuti dan dinas luar kota.</p>
+              <button onclick="showToast('Mengunduh Laporan_SDM.pdf')" class="mt-2.5 px-2.5 py-1 bg-slate-800 text-white rounded text-[11px] font-semibold flex items-center gap-1.5 shadow-xs">
+                <i data-lucide="file-text" class="w-3 h-3"></i> Unduh PDF
               </button>
             </div>
           </div>
@@ -1149,62 +1022,42 @@
       <!-- ======================================================== -->
       <section id="tab-rbac" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 shadow-xs">
           <div class="flex items-center gap-2 mb-1">
             <i data-lucide="shield-check" class="w-4 h-4 text-blue-600"></i>
-            <h2 class="text-sm font-bold text-slate-900">Arsitektur Keamanan & Matriks Hak Akses Pengguna (Role-Based Access)</h2>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Arsitektur Keamanan & Matriks Hak Akses (RBAC)</h2>
           </div>
-          <p class="text-xs text-slate-500">
-            Sistem membatasi wewenang setiap pengguna berdasarkan tugas pokok dan fungsi (Tupoksi) di PT. Servo Indonesia Perkasa guna menjamin kerahasiaan data finansial perusahaan.
-          </p>
+          <p class="text-[11px] text-slate-500 mb-3">Pemisahan wewenang pengguna berdasarkan tugas pokok dan fungsi (Tupoksi) di PT. Servo Indonesia Perkasa.</p>
 
-          <div class="mt-4 overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse border border-slate-200">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse border border-slate-200 min-w-[560px]">
               <thead>
-                <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold text-[11px]">
-                  <th class="py-2.5 px-3 border-r border-slate-200">Modul & Fitur Sistem</th>
-                  <th class="py-2.5 px-3 text-center border-r border-slate-200 bg-blue-50/70 text-blue-950">Role: DIREKTUR</th>
-                  <th class="py-2.5 px-3 text-center border-r border-slate-200 bg-slate-50 text-slate-900">Role: MANAGER</th>
-                  <th class="py-2.5 px-3 text-center text-slate-700">Role: STAFF ADMIN</th>
+                <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold text-[10.5px]">
+                  <th class="py-2 px-3 border-r border-slate-200">Modul Sistem</th>
+                  <th class="py-2 px-3 text-center border-r border-slate-200 bg-blue-50/70 text-blue-950">DIREKTUR</th>
+                  <th class="py-2 px-3 text-center border-r border-slate-200 bg-slate-50 text-slate-900">MANAGER</th>
+                  <th class="py-2 px-3 text-center text-slate-700">STAFF</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-200 text-slate-700">
-                
+              <tbody class="divide-y divide-slate-200 text-slate-700 text-[11.5px]">
                 <tr>
-                  <td class="py-2.5 px-3 font-semibold text-slate-900 border-r border-slate-200">Dashboard Eksekutif & Ringkasan Keuangan</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-bold text-emerald-700">Akses Penuh (Full View)</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-medium text-slate-800">Ringkasan Operasional Divisi</td>
-                  <td class="py-2.5 px-3 text-center text-slate-400">Terbatas (Non-Finansial)</td>
+                  <td class="py-2 px-3 font-semibold text-slate-900 border-r border-slate-200">Dashboard & Keuangan</td>
+                  <td class="py-2 px-3 text-center border-r border-slate-200 font-bold text-emerald-700">Akses Penuh</td>
+                  <td class="py-2 px-3 text-center border-r border-slate-200 text-slate-800">Operasional Divisi</td>
+                  <td class="py-2 px-3 text-center text-slate-400">Non-Finansial</td>
                 </tr>
-
                 <tr>
-                  <td class="py-2.5 px-3 font-semibold text-slate-900 border-r border-slate-200">Master Data Kontrak & PKS Klien</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-bold text-emerald-700">Monitoring & Approval Akhir</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-medium text-slate-800">Verifikasi & Pengawasan Klausul</td>
-                  <td class="py-2.5 px-3 text-center text-slate-600">Entri Data & Upload Berkas PDF</td>
+                  <td class="py-2 px-3 font-semibold text-slate-900 border-r border-slate-200">Master Data Kontrak</td>
+                  <td class="py-2 px-3 text-center border-r border-slate-200 font-bold text-emerald-700">Approval Akhir</td>
+                  <td class="py-2 px-3 text-center border-r border-slate-200 text-slate-800">Verifikasi</td>
+                  <td class="py-2 px-3 text-center text-slate-600">Entri Data</td>
                 </tr>
-
                 <tr>
-                  <td class="py-2.5 px-3 font-semibold text-slate-900 border-r border-slate-200">Faktur Tagihan (Invoice) & Kas Masuk</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-bold text-emerald-700">Otorisasi Pembayaran Lunas</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-medium text-slate-800">Review Draft Invoice & Reminder</td>
-                  <td class="py-2.5 px-3 text-center text-slate-600">Input Data Faktur & Kwitansi</td>
+                  <td class="py-2 px-3 font-semibold text-slate-900 border-r border-slate-200">Faktur & Kwitansi</td>
+                  <td class="py-2 px-3 text-center border-r border-slate-200 font-bold text-emerald-700">Otorisasi Lunas</td>
+                  <td class="py-2 px-3 text-center border-r border-slate-200 text-slate-800">Review Draft</td>
+                  <td class="py-2 px-3 text-center text-slate-600">Input Faktur</td>
                 </tr>
-
-                <tr>
-                  <td class="py-2.5 px-3 font-semibold text-slate-900 border-r border-slate-200">Permohonan Izin / Cuti Karyawan</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-bold text-emerald-700">Approval Tingkat 2 (Final)</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-bold text-blue-700">Approval Tingkat 1 (Manager)</td>
-                  <td class="py-2.5 px-3 text-center text-slate-600">Pengajuan Mandiri Pribadi</td>
-                </tr>
-
-                <tr>
-                  <td class="py-2.5 px-3 font-semibold text-slate-900 border-r border-slate-200">Pusat Laporan & Ekspor Data</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-bold text-emerald-700">Seluruh Laporan Bebas Unduh</td>
-                  <td class="py-2.5 px-3 text-center border-r border-slate-200 font-medium text-slate-800">Laporan Operasional Divisi</td>
-                  <td class="py-2.5 px-3 text-center text-slate-400">Hanya Cetak Kwitansi/Form</td>
-                </tr>
-
               </tbody>
             </table>
           </div>
@@ -1213,44 +1066,35 @@
       </section>
 
       <!-- ======================================================== -->
-      <!-- TAB 11: AUDIT LOG & KEAMANAN SISTEM -->
+      <!-- TAB 11: AUDIT LOG KEAMANAN SISTEM -->
       <!-- ======================================================== -->
       <section id="tab-audit" class="space-y-4 hidden">
         
-        <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+        <div class="bg-white p-3.5 sm:p-4 rounded-lg border border-slate-200 shadow-xs">
           <div class="flex items-center gap-2 mb-1">
             <i data-lucide="history" class="w-4 h-4 text-blue-600"></i>
-            <h2 class="text-sm font-bold text-slate-900">Catatan Audit Sistem & Rekam Jejak Keamanan</h2>
+            <h2 class="text-xs sm:text-sm font-bold text-slate-900">Catatan Audit Sistem & Rekam Jejak Aktivitas</h2>
           </div>
-          <p class="text-xs text-slate-500">
-            Sistem secara otomatis mencatat setiap aktivitas login, pengunduhan berkas kontrak, dan approval dokumen untuk mencegah kebocoran data.
-          </p>
+          <p class="text-[11px] text-slate-500 mb-3">Sistem secara otomatis mencatat setiap aktivitas otorisasi dokumen untuk keamanan internal.</p>
 
-          <div class="mt-4 overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse min-w-[540px]">
               <thead>
-                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[11px]">
-                  <th class="py-2.5 px-3">Waktu & Tanggal</th>
-                  <th class="py-2.5 px-3">Pengguna</th>
-                  <th class="py-2.5 px-3">Aktivitas Sistem</th>
-                  <th class="py-2.5 px-3 font-mono">Alamat IP</th>
-                  <th class="py-2.5 px-3 text-center">Status Keamanan</th>
+                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[10.5px]">
+                  <th class="py-2 px-3">Waktu</th>
+                  <th class="py-2 px-3">Pengguna</th>
+                  <th class="py-2 px-3">Aktivitas</th>
+                  <th class="py-2 px-3 font-mono">IP</th>
+                  <th class="py-2 px-3 text-center">Status</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100 font-mono text-[11px]">
+              <tbody class="divide-y divide-slate-100 font-mono text-[10.5px]">
                 <tr>
-                  <td class="py-2.5 px-3 text-slate-500">24/11/2024 11:15:20</td>
-                  <td class="py-2.5 px-3 font-bold text-slate-900 font-sans">Direksi Utama (DIR)</td>
-                  <td class="py-2.5 px-3 font-sans text-slate-700">Verifikasi Dokumen PKS No. 072/PO-U/XI/2023</td>
-                  <td class="py-2.5 px-3 text-slate-600">182.253.112.4</td>
-                  <td class="py-2.5 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800">Valid</span></td>
-                </tr>
-                <tr>
-                  <td class="py-2.5 px-3 text-slate-500">24/11/2024 10:48:12</td>
-                  <td class="py-2.5 px-3 font-bold text-slate-900 font-sans">Dina Safitri (Finance)</td>
-                  <td class="py-2.5 px-3 font-sans text-slate-700">Penerbitan Invoice No. INV/SIP/2024/XI/0104</td>
-                  <td class="py-2.5 px-3 text-slate-600">182.253.112.9</td>
-                  <td class="py-2.5 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800">Valid</span></td>
+                  <td class="py-2 px-3 text-slate-500">24/11 11:15</td>
+                  <td class="py-2 px-3 font-bold text-slate-900 font-sans">Direksi Utama</td>
+                  <td class="py-2 px-3 font-sans text-slate-700">Verifikasi PKS 072/PO-U/XI/2023</td>
+                  <td class="py-2 px-3 text-slate-600">182.253.112.4</td>
+                  <td class="py-2 px-3 text-center"><span class="px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-emerald-50 text-emerald-800">Valid</span></td>
                 </tr>
               </tbody>
             </table>
@@ -1265,8 +1109,8 @@
   <!-- ======================================================== -->
   <!-- MODAL: DETAIL KONTRAK LENGKAP -->
   <!-- ======================================================== -->
-  <div id="modalDetail" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-lg w-full p-5 shadow-2xl border border-slate-200">
+  <div id="modalDetail" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-lg max-w-lg w-full p-4 sm:p-5 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       
       <div class="flex items-center justify-between pb-3 border-b border-slate-200">
         <div>
@@ -1276,42 +1120,42 @@
           </h3>
           <p class="text-[11px] text-slate-500" id="detailNomor"></p>
         </div>
-        <button onclick="closeModal('modalDetail')" class="text-slate-400 hover:text-slate-600">
+        <button onclick="closeModal('modalDetail')" class="text-slate-400 hover:text-slate-600 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <div class="mt-4 space-y-3 text-xs">
-        <div class="p-3 bg-slate-50 rounded border border-slate-200">
-          <span class="text-[10.5px] text-slate-500 font-bold uppercase tracking-wider block">Pihak Rekanan / Klien</span>
-          <p class="font-bold text-slate-900 text-sm mt-0.5" id="detailKlien"></p>
+      <div class="mt-3.5 space-y-2.5 text-xs">
+        <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
+          <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Pihak Rekanan / Klien</span>
+          <p class="font-bold text-slate-900 text-xs sm:text-sm mt-0.5" id="detailKlien"></p>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
-            <span class="text-[10px] text-slate-500 font-bold uppercase block">Nilai Kontrak</span>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="p-2 bg-slate-50 rounded border border-slate-200">
+            <span class="text-[9.5px] text-slate-500 font-bold uppercase block">Nilai Kontrak</span>
             <p class="font-mono font-bold text-slate-900 text-xs mt-0.5" id="detailNilai"></p>
           </div>
-          <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
-            <span class="text-[10px] text-slate-500 font-bold uppercase block">Masa Berlaku</span>
-            <p class="font-mono text-slate-700 text-[11px] mt-0.5" id="detailPeriode"></p>
+          <div class="p-2 bg-slate-50 rounded border border-slate-200">
+            <span class="text-[9.5px] text-slate-500 font-bold uppercase block">Masa Berlaku</span>
+            <p class="font-mono text-slate-700 text-[10.5px] mt-0.5" id="detailPeriode"></p>
           </div>
         </div>
 
         <div>
-          <span class="text-[11px] text-slate-500 font-bold block mb-1">Lingkup Kerja Sama:</span>
-          <p class="p-2.5 border rounded border-slate-200 text-slate-700 bg-white" id="detailLingkup"></p>
+          <span class="text-[10.5px] text-slate-500 font-bold block mb-1">Lingkup Kerja Sama:</span>
+          <p class="p-2 border rounded border-slate-200 text-slate-700 bg-white" id="detailLingkup"></p>
         </div>
 
         <div>
-          <span class="text-[11px] text-slate-500 font-bold block mb-1">Catatan Tindak Lanjut / Status:</span>
-          <p class="p-2.5 border rounded border-amber-200 bg-amber-50 text-amber-900 font-medium" id="detailCatatan"></p>
+          <span class="text-[10.5px] text-slate-500 font-bold block mb-1">Catatan Tindak Lanjut:</span>
+          <p class="p-2 border rounded border-amber-200 bg-amber-50 text-amber-900 font-medium" id="detailCatatan"></p>
         </div>
 
         <div class="pt-3 border-t border-slate-200 flex justify-end gap-2">
           <button type="button" onclick="closeModal('modalDetail')" class="px-3 py-1.5 border border-slate-300 rounded text-slate-700 font-medium hover:bg-slate-50">Tutup</button>
           <button type="button" onclick="showToast('Mengunduh draft dokumen PDF')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded font-semibold flex items-center gap-1.5">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh Berkas PDF
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh PDF
           </button>
         </div>
       </div>
@@ -1322,42 +1166,42 @@
   <!-- ======================================================== -->
   <!-- MODAL: CETAK KWITANSI RESMI -->
   <!-- ======================================================== -->
-  <div id="modalKwitansi" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-lg w-full p-6 shadow-2xl border border-slate-200 font-sans">
+  <div id="modalKwitansi" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-lg max-w-lg w-full p-4 sm:p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       
-      <div class="border-b-2 border-slate-800 pb-3 flex justify-between items-start">
+      <div class="border-b-2 border-slate-800 pb-3 flex justify-between items-start gap-2">
         <div>
-          <span class="font-bold text-xs uppercase tracking-wider text-slate-500 block">Kwitansi Tanda Terima</span>
-          <p class="font-extrabold text-base text-slate-900">PT. SERVO INDONESIA PERKASA</p>
+          <span class="font-bold text-[10px] uppercase tracking-wider text-slate-500 block">Kwitansi Tanda Terima</span>
+          <p class="font-extrabold text-sm sm:text-base text-slate-900">PT. SERVO INDONESIA PERKASA</p>
         </div>
         <div class="text-right">
-          <span class="text-[10px] text-slate-500 block">Nomor Bukti:</span>
+          <span class="text-[9.5px] text-slate-500 block">Nomor Bukti:</span>
           <span class="font-mono font-bold text-blue-700 text-xs" id="kwitansiNo"></span>
         </div>
       </div>
 
-      <div class="my-4 space-y-2.5 text-xs">
+      <div class="my-3.5 space-y-2 text-xs">
         <div class="flex justify-between py-1 border-b border-slate-100">
-          <span class="text-slate-500">Telah Diterima Dari:</span>
+          <span class="text-slate-500">Diterima Dari:</span>
           <span class="font-bold text-slate-900" id="kwitansiKlien"></span>
         </div>
         <div class="flex justify-between py-1 border-b border-slate-100">
-          <span class="text-slate-500">Untuk Pembayaran:</span>
-          <span class="text-slate-800 text-right font-medium max-w-[280px]" id="kwitansiUraian"></span>
+          <span class="text-slate-500">Uraian:</span>
+          <span class="text-slate-800 text-right font-medium max-w-[220px] sm:max-w-[280px]" id="kwitansiUraian"></span>
         </div>
         <div class="flex justify-between py-1 border-b border-slate-100">
-          <span class="text-slate-500">Tanggal Transaksi:</span>
+          <span class="text-slate-500">Tanggal:</span>
           <span class="font-mono text-slate-700" id="kwitansiTgl"></span>
         </div>
-        <div class="p-3 bg-emerald-50 border border-emerald-200 rounded flex justify-between items-center mt-3">
-          <span class="font-bold text-emerald-900">JUMLAH DITERIMA (LUNAS):</span>
-          <span class="font-mono font-extrabold text-emerald-800 text-sm" id="kwitansiNominal"></span>
+        <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded flex justify-between items-center mt-2.5">
+          <span class="font-bold text-emerald-900 text-xs">JUMLAH (LUNAS):</span>
+          <span class="font-mono font-extrabold text-emerald-800 text-xs sm:text-sm" id="kwitansiNominal"></span>
         </div>
       </div>
 
       <div class="pt-3 border-t border-slate-200 flex justify-end gap-2 text-xs">
         <button type="button" onclick="closeModal('modalKwitansi')" class="px-3 py-1.5 border border-slate-300 rounded text-slate-700 font-medium hover:bg-slate-50">Tutup</button>
-        <button type="button" onclick="showToast('Kwitansi resmi telah dicetak (PDF/Printer)')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-semibold flex items-center gap-1.5">
+        <button type="button" onclick="showToast('Kwitansi resmi telah dicetak')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-semibold flex items-center gap-1.5">
           <i data-lucide="printer" class="w-3.5 h-3.5"></i> Cetak Kwitansi
         </button>
       </div>
@@ -1368,19 +1212,19 @@
   <!-- ======================================================== -->
   <!-- MODAL: INPUT KONTRAK BARU -->
   <!-- ======================================================== -->
-  <div id="modalKontrak" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-lg w-full p-5 shadow-xl border border-slate-200">
+  <div id="modalKontrak" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-lg max-w-lg w-full p-4 sm:p-5 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-200">
         <div>
           <h3 class="font-bold text-sm text-slate-900">Pendaftaran Kontrak / PKS Baru</h3>
-          <p class="text-[11px] text-slate-500">Isi parameter legalitas dan data rekanan pihak kedua.</p>
+          <p class="text-[10.5px] text-slate-500">Isi parameter legalitas dan data rekanan pihak kedua.</p>
         </div>
-        <button onclick="closeModal('modalKontrak')" class="text-slate-400 hover:text-slate-600">
+        <button onclick="closeModal('modalKontrak')" class="text-slate-400 hover:text-slate-600 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <form onsubmit="handleFormSubmit(event, 'modalKontrak', 'Data kontrak berhasil disimpan ke database!')" class="mt-4 space-y-3 text-xs">
+      <form onsubmit="handleFormSubmit(event, 'modalKontrak', 'Data kontrak berhasil disimpan ke database!')" class="mt-3.5 space-y-3 text-xs">
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Nomor Registrasi Kontrak / SPK</label>
           <input type="text" placeholder="Contoh: 110/SPK/SIP/XI/2024" required class="w-full px-3 py-1.5 border rounded border-slate-300 font-mono text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
@@ -1393,22 +1237,22 @@
           <label class="block font-semibold text-slate-700 mb-1">Lingkup / Judul Perjanjian</label>
           <input type="text" placeholder="Deskripsi pekerjaan" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Tanggal Berlaku</label>
-            <input type="date" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs text-slate-700 focus:outline-none">
+            <label class="block font-semibold text-slate-700 mb-1">Tgl Mulai</label>
+            <input type="date" required class="w-full px-2.5 py-1.5 border rounded border-slate-300 text-xs text-slate-700 focus:outline-none">
           </div>
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Tanggal Berakhir</label>
-            <input type="date" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs text-slate-700 focus:outline-none">
+            <label class="block font-semibold text-slate-700 mb-1">Tgl Selesai</label>
+            <input type="date" required class="w-full px-2.5 py-1.5 border rounded border-slate-300 text-xs text-slate-700 focus:outline-none">
           </div>
         </div>
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">Nilai Kontrak Bruto (Rupiah)</label>
+          <label class="block font-semibold text-slate-700 mb-1">Nilai Kontrak Bruto (Rp)</label>
           <input type="number" placeholder="250000000" required class="w-full px-3 py-1.5 border rounded border-slate-300 font-mono text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
         </div>
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">Unggah Lampiran Berkas Asli (PDF)</label>
+          <label class="block font-semibold text-slate-700 mb-1">Unggah Dokumen PDF</label>
           <input type="file" accept=".pdf" class="w-full text-slate-500 text-xs file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200">
         </div>
         <div class="pt-3 border-t border-slate-200 flex justify-end gap-2">
@@ -1422,25 +1266,25 @@
   <!-- ======================================================== -->
   <!-- MODAL: BUAT INVOICE BARU -->
   <!-- ======================================================== -->
-  <div id="modalInvoice" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-lg w-full p-5 shadow-xl border border-slate-200">
+  <div id="modalInvoice" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-lg max-w-lg w-full p-4 sm:p-5 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-200">
         <div>
           <h3 class="font-bold text-sm text-slate-900">Penerbitan Faktur Tagihan (Invoice)</h3>
-          <p class="text-[11px] text-slate-500">Penomoran faktur otomatis untuk termin penagihan rekanan.</p>
+          <p class="text-[10.5px] text-slate-500">Penomoran faktur otomatis untuk termin rekanan.</p>
         </div>
-        <button onclick="closeModal('modalInvoice')" class="text-slate-400 hover:text-slate-600">
+        <button onclick="closeModal('modalInvoice')" class="text-slate-400 hover:text-slate-600 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <form onsubmit="handleFormSubmit(event, 'modalInvoice', 'Faktur tagihan invoice berhasil diterbitkan!')" class="mt-4 space-y-3 text-xs">
+      <form onsubmit="handleFormSubmit(event, 'modalInvoice', 'Faktur tagihan invoice berhasil diterbitkan!')" class="mt-3.5 space-y-3 text-xs">
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Nomor Faktur</label>
           <input type="text" value="INV/SIP/2024/XI/0128" readonly class="w-full px-3 py-1.5 border rounded bg-slate-100 text-slate-600 font-mono text-xs">
         </div>
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">Pilih Rekanan / Klien</label>
+          <label class="block font-semibold text-slate-700 mb-1">Pilih Rekanan</label>
           <select required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs bg-white">
             <option value="">-- Pilih Rekanan Terdaftar --</option>
             <option>PT. Petro Indo Energi</option>
@@ -1451,16 +1295,16 @@
         </div>
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Uraian / Termin Tagihan</label>
-          <input type="text" placeholder="Contoh: Termin 2 (Progres Pekerjaan 30%)" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs">
+          <input type="text" placeholder="Contoh: Termin 2 (Progres 30%)" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs">
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="block font-semibold text-slate-700 mb-1">Tgl Terbit</label>
-            <input type="date" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs">
+            <input type="date" required class="w-full px-2.5 py-1.5 border rounded border-slate-300 text-xs">
           </div>
           <div>
             <label class="block font-semibold text-slate-700 mb-1">Jatuh Tempo</label>
-            <input type="date" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs">
+            <input type="date" required class="w-full px-2.5 py-1.5 border rounded border-slate-300 text-xs">
           </div>
         </div>
         <div>
@@ -1478,19 +1322,19 @@
   <!-- ======================================================== -->
   <!-- MODAL: PENGAJUAN CUTI / IZIN ONLINE -->
   <!-- ======================================================== -->
-  <div id="modalCuti" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-lg w-full p-5 shadow-xl border border-slate-200">
+  <div id="modalCuti" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-lg max-w-lg w-full p-4 sm:p-5 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-200">
         <div>
           <h3 class="font-bold text-sm text-slate-900">Formulir Pengajuan Izin / Cuti Online</h3>
-          <p class="text-[11px] text-slate-500">Akan diteruskan ke Manager untuk verifikasi awal.</p>
+          <p class="text-[10.5px] text-slate-500">Akan diteruskan ke Manager untuk verifikasi.</p>
         </div>
-        <button onclick="closeModal('modalCuti')" class="text-slate-400 hover:text-slate-600">
+        <button onclick="closeModal('modalCuti')" class="text-slate-400 hover:text-slate-600 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <form onsubmit="handleFormSubmit(event, 'modalCuti', 'Pengajuan berhasil dikirimkan ke antrean approval!')" class="mt-4 space-y-3 text-xs">
+      <form onsubmit="handleFormSubmit(event, 'modalCuti', 'Pengajuan berhasil dikirimkan ke antrean approval!')" class="mt-3.5 space-y-3 text-xs">
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Nama Pegawai Pemohon</label>
           <input type="text" id="cutiNamaPegawai" value="Dina Safitri" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs">
@@ -1499,23 +1343,23 @@
           <label class="block font-semibold text-slate-700 mb-1">Kategori Pengajuan</label>
           <select required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs bg-white">
             <option value="cuti">Cuti Tahunan Pribadi</option>
-            <option value="sakit">Izin Sakit</option>
+            <option value="sakit">Izin Sakit (Surat Dokter)</option>
             <option value="tugas">Surat Perintah Tugas Luar Kota (SPT)</option>
             <option value="khusus">Izin Khusus / Dispensasi</option>
           </select>
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Tanggal Mulai</label>
-            <input type="date" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs">
+            <label class="block font-semibold text-slate-700 mb-1">Tgl Mulai</label>
+            <input type="date" required class="w-full px-2.5 py-1.5 border rounded border-slate-300 text-xs">
           </div>
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Tanggal Selesai</label>
-            <input type="date" required class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs">
+            <label class="block font-semibold text-slate-700 mb-1">Tgl Selesai</label>
+            <input type="date" required class="w-full px-2.5 py-1.5 border rounded border-slate-300 text-xs">
           </div>
         </div>
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">Keterangan / Keperluan Lengkap</label>
+          <label class="block font-semibold text-slate-700 mb-1">Keterangan Lengkap</label>
           <textarea rows="3" required placeholder="Tuliskan alasan pengajuan..." class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs"></textarea>
         </div>
         <div class="pt-3 border-t border-slate-200 flex justify-end gap-2">
@@ -1529,25 +1373,25 @@
   <!-- ======================================================== -->
   <!-- MODAL: EDIT KONTRAK -->
   <!-- ======================================================== -->
-  <div id="modalEdit" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg max-w-lg w-full p-5 shadow-xl border border-slate-200">
+  <div id="modalEdit" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-lg max-w-lg w-full p-4 sm:p-5 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-200">
         <div>
           <h3 class="font-bold text-sm text-slate-900">Perbarui Parameter Dokumen Kontrak</h3>
-          <p class="text-[11px] text-slate-500">Edit data nomor PKS, nama klien, atau koreksi nominal.</p>
+          <p class="text-[10.5px] text-slate-500">Edit data nomor PKS, nama rekanan, atau nilai.</p>
         </div>
-        <button onclick="closeModal('modalEdit')" class="text-slate-400 hover:text-slate-600">
+        <button onclick="closeModal('modalEdit')" class="text-slate-400 hover:text-slate-600 p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <form onsubmit="handleFormSubmit(event, 'modalEdit', 'Perubahan data kontrak berhasil disimpan!')" class="mt-4 space-y-3 text-xs">
+      <form onsubmit="handleFormSubmit(event, 'modalEdit', 'Perubahan data kontrak berhasil disimpan!')" class="mt-3.5 space-y-3 text-xs">
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Nomor Registrasi Kontrak</label>
           <input type="text" id="editNomor" class="w-full px-3 py-1.5 border rounded bg-slate-50 border-slate-300 font-mono text-xs">
         </div>
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">Pihak Klien / Instansi</label>
+          <label class="block font-semibold text-slate-700 mb-1">Pihak Rekanan / Klien</label>
           <input type="text" id="editKlien" class="w-full px-3 py-1.5 border rounded border-slate-300 text-xs">
         </div>
         <div>
@@ -1562,17 +1406,37 @@
     </div>
   </div>
 
-  <!-- TOAST FEEDBACK MINIMALIS -->
-  <div id="toast" class="fixed bottom-4 right-4 z-50 bg-slate-900 text-white px-4 py-2.5 rounded shadow-lg border border-slate-800 flex items-center gap-2.5 transform translate-y-16 opacity-0 transition-all duration-200 text-xs">
-    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-    <span id="toastMsg" class="font-medium">Pemberitahuan sistem</span>
+  <!-- TOAST FEEDBACK NOTIFICATION -->
+  <div id="toast" class="fixed bottom-4 right-4 z-50 bg-slate-900 text-white px-3.5 py-2.5 rounded shadow-lg border border-slate-800 flex items-center gap-2 transform translate-y-16 opacity-0 transition-all duration-200 text-xs max-w-xs sm:max-w-md">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+    <span id="toastMsg" class="font-medium truncate">Pemberitahuan sistem</span>
   </div>
 
-  <!-- SCRIPT LOGIKA SIMULASI LENGKAP -->
+  <!-- SCRIPT LOGIKA SIMULASI & RESPONSIVE -->
   <script>
     lucide.createIcons();
 
     let activeRole = 'direktur';
+
+    // Toggle Mobile Sidebar (Buka/Tutup di HP)
+    function toggleSidebar(open) {
+      const sidebar = document.getElementById('mainSidebar');
+      const backdrop = document.getElementById('mobileBackdrop');
+      
+      if (open) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    // Nav click handler for mobile auto-close
+    function handleNavClick(tabId) {
+      switchTab(tabId);
+      toggleSidebar(false);
+    }
 
     function setRole(role) {
       activeRole = role;
@@ -1580,9 +1444,9 @@
       ['direktur', 'manager', 'staff'].forEach(r => {
         const btn = document.getElementById(`btn-role-${r}`);
         if(r === role) {
-          btn.className = "px-2.5 py-0.5 rounded text-[11px] font-semibold bg-white text-slate-900 shadow-sm border border-slate-200 transition";
+          btn.className = "px-2 sm:px-2.5 py-0.5 rounded text-[10px] sm:text-[11px] font-semibold bg-white text-slate-900 shadow-xs border border-slate-200 transition";
         } else {
-          btn.className = "px-2.5 py-0.5 rounded text-[11px] font-medium text-slate-600 hover:text-slate-900 transition";
+          btn.className = "px-2 sm:px-2.5 py-0.5 rounded text-[10px] sm:text-[11px] font-medium text-slate-600 hover:text-slate-900 transition";
         }
       });
 
@@ -1596,19 +1460,19 @@
         sidebarName.innerText = "Direksi Utama";
         sidebarRole.innerText = "PT. Servo Indonesia Perkasa";
         avatarBadge.innerText = "DIR";
-        if (roleIndicator) roleIndicator.innerText = "Role: Direktur (Approval Akhir)";
+        if (roleIndicator) roleIndicator.innerText = "Role: Direktur";
         if (cutiUser) cutiUser.value = "Direksi Utama";
       } else if (role === 'manager') {
         sidebarName.innerText = "Manager Operasional";
         sidebarRole.innerText = "Div. Teknik & Operasional";
         avatarBadge.innerText = "MGR";
-        if (roleIndicator) roleIndicator.innerText = "Role: Manager (Review Awal)";
+        if (roleIndicator) roleIndicator.innerText = "Role: Manager";
         if (cutiUser) cutiUser.value = "Manager Operasional";
       } else {
         sidebarName.innerText = "Staff Administrasi";
         sidebarRole.innerText = "Div. Logistik & Admin";
         avatarBadge.innerText = "STF";
-        if (roleIndicator) roleIndicator.innerText = "Role: Staff (Input & Request)";
+        if (roleIndicator) roleIndicator.innerText = "Role: Staff";
         if (cutiUser) cutiUser.value = "Staff Administrasi";
       }
 
@@ -1699,15 +1563,17 @@
 
     function approveDirect(btn, label) {
       const parent = btn.closest('.approval-group');
-      parent.innerHTML = `<span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">${label} (${activeRole.toUpperCase()})</span>`;
+      parent.innerHTML = `<span class="px-2 py-0.5 rounded text-[9.5px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">${label} (${activeRole.toUpperCase()})</span>`;
       showToast(`Dokumen berhasil divalidasi oleh ${activeRole.toUpperCase()}`);
     }
 
     function markInvoicePaid(btn) {
       const row = btn.closest('tr');
-      const badgeTd = row.querySelector('td:nth-child(7)');
-      badgeTd.innerHTML = `<span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">LUNAS</span>`;
-      btn.parentElement.innerHTML = `<button onclick="showToast('Mencetak Kwitansi Asli')" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded text-[11px] font-semibold">Cetak Kwitansi</button>`;
+      const badgeTd = row.querySelector('td:nth-child(6)');
+      if (badgeTd) {
+        badgeTd.innerHTML = `<span class="inline-block px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">LUNAS</span>`;
+      }
+      btn.parentElement.innerHTML = `<button onclick="showToast('Mencetak Kwitansi Asli')" class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10.5px] font-semibold">Kwitansi</button>`;
       showToast("Faktur telah diverifikasi LUNAS!");
     }
 
